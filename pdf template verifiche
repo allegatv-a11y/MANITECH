@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: Arial, sans-serif; color: #333; margin: 25px; font-size: 10px; }
+    header { border-bottom: 5px solid #FFC400; padding-bottom: 15px; margin-bottom: 20px; display: flex; align-items: center; }
+    .logo { height: 50px; margin-right: 20px; }
+    h1 { color: #111; font-size: 20px; margin: 0; }
+    .meta-info { font-size: 11px; color: #555; margin-top: 5px; }
+    h2 { background-color: #333; color: white; padding: 8px 12px; font-size: 14px; margin-top: 25px; margin-bottom: 10px; border-radius: 4px; }
+    .section-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+    .section-table td { border: 1px solid #ddd; padding: 8px; }
+    .section-table .label { font-weight: bold; background-color: #f5f5f5; width: 15%; }
+    .checklist-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    .checklist-table th, .checklist-table td { border: 1px solid #ccc; padding: 6px; text-align: left; }
+    .checklist-table th { background-color: #eee; font-weight: bold; }
+    .item-code { width: 5%; }
+    .item-desc { width: 65%; }
+    .check-cell { text-align: center; width: 10%; }
+    .firma-section { margin-top: 30px; display: flex; justify-content: space-around; }
+    .firma-box { border: 1px solid #ccc; padding: 10px; width: 45%; text-align: center; }
+    .firma-img { max-width: 100%; height: auto; max-height: 80px; }
+    footer { margin-top: 40px; font-size: 9px; color: #aaa; text-align: center; border-top: 1px solid #eee; padding-top: 10px; }
+  </style>
+</head>
+<body>
+  <header>
+    <img class="logo" src="<?= meta.logoUrl ?>" alt="Logo" />
+    <div>
+      <h1>Rapporto di Controllo Periodico</h1>
+      <div class="meta-info">ID Documento: <?= meta.id ?> | Data: <?= meta.createdAt ?></div>
+    </div>
+  </header>
+
+  <h2>📌 DATI CLIENTE</h2>
+  <table class="section-table">
+    <tr>
+      <td class="label">Azienda</td>
+      <td><?= data.cliente ?></td>
+      <td class="label">Nome Contatto</td>
+      <td><?= data.contattoNome ?></td>
+    </tr>
+    <tr>
+      <td class="label">Telefono</td>
+      <td><?= data.contattoTel ?></td>
+      <td class="label">Email</td>
+      <td><?= data.contattoEmail ?></td>
+    </tr>
+  </table>
+
+  <h2>🏭 DATI MACCHINA</h2>
+  <table class="section-table">
+    <tr>
+      <td class="label">Marca</td>
+      <td><?= data.marca ?></td>
+      <td class="label">Modello</td>
+      <td><?= data.modello ?></td>
+      <td class="label">Matricola</td>
+      <td><?= data.matricola ?></td>
+    </tr>
+  </table>
+
+  <? function renderChecklist(items) { ?>
+    <table class="checklist-table">
+      <thead>
+        <tr>
+          <th class="item-code">Voce</th>
+          <th class="item-desc">Controllo</th>
+          <th class="check-cell">P</th>
+          <th class="check-cell">N</th>
+          <th class="check-cell">NP</th>
+        </tr>
+      </thead>
+      <tbody>
+        <? for (var i = 0; i < items.length; i++) { ?>
+          <tr>
+            <td><?= items[i].code ?></td>
+            <td><?= items[i].desc ?></td>
+            <td class="check-cell"><?= items[i].status === 'P' ? '✓' : '' ?></td>
+            <td class="check-cell"><?= items[i].status === 'N' ? '✗' : '' ?></td>
+            <td class="check-cell"><?= items[i].status === 'NP' ? '–' : '' ?></td>
+          </tr>
+        <? } ?>
+      </tbody>
+    </table>
+  <? } ?>
+
+  <h2>✅ VERIFICHE SICUREZZE</h2>
+  <? renderChecklist(data.verificheSicurezze); ?>
+
+  <h2>🔧 MANUTENZIONE PREVENTIVA</h2>
+  <? renderChecklist(data.manutenzionePreventiva); ?>
+  
+  <? if (data.verificheElettrico && data.verificheElettrico.length > 0) { ?>
+    <h2>🔋 Verifiche per soli carrelli elettrici</h2>
+    <? renderChecklist(data.verificheElettrico); ?>
+  <? } ?>
+  
+  <? if (data.verificheDiesel && data.verificheDiesel.length > 0) { ?>
+    <h2>⛽ Verifiche per soli carrelli diesel</h2>
+    <? renderChecklist(data.verificheDiesel); ?>
+  <? } ?>
+
+  <? if (data.verificheTrilaterale && data.verificheTrilaterale.length > 0) { ?>
+    <h2>🏗️ Verifiche per soli carrelli trilaterali e combinati</h2>
+    <? renderChecklist(data.verificheTrilaterale); ?>
+  <? } ?>
+  
+  <h2>📝 NOTE</h2>
+  <div style="border: 1px solid #ccc; padding: 10px; min-height: 50px; white-space: pre-wrap;"><?= data.noteGenerali || 'Nessuna nota' ?></div>
+
+  <? if (data.ricambi && data.ricambi.length > 0) { ?>
+    <h2>📦 RICAMBI UTILIZZATI</h2>
+    <table class="checklist-table">
+      <thead>
+        <tr>
+          <th>COD. ART.</th>
+          <th>DESCRIZIONE</th>
+          <th>Q.TA</th>
+        </tr>
+      </thead>
+      <tbody>
+        <? for (var i = 0; i < data.ricambi.length; i++) { ?>
+          <tr>
+            <td><?= data.ricambi[i].codice ?></td>
+            <td><?= data.ricambi[i].descrizione ?></td>
+            <td><?= data.ricambi[i].quantita ?></td>
+          </tr>
+        <? } ?>
+      </tbody>
+    </table>
+  <? } ?>
+
+  <div class="firma-section">
+    <div class="firma-box">
+      <h4>Firma Tecnico</h4>
+      <? if (data.firmaTecnicoUrl) { ?><img src="<?= data.firmaTecnicoUrl ?>" class="firma-img" /><? } ?>
+    </div>
+    <div class="firma-box">
+      <h4>Firma Cliente</h4>
+      <? if (data.firmaClienteUrl) { ?><img src="<?= data.firmaClienteUrl ?>" class="firma-img" /><? } ?>
+    </div>
+  </div>
+
+  <footer>Documento generato automaticamente dal sistema Manitech S.r.l.</footer>
+</body>
+</html>
