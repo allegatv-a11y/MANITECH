@@ -1,0 +1,20 @@
+<div class="card card-dark p-3">
+  <h4 style="color:#FFC400">Richiesta Noleggio</h4>
+  <div><label>Macchina ID</label><input id="rMachine" class="form-control"></div>
+  <div class="mt-2"><label>Start</label><input id="rStart" type="date" class="form-control"></div>
+  <div class="mt-2"><label>End</label><input id="rEnd" type="date" class="form-control"></div>
+  <button class="btn btn-yellow mt-2" onclick="requestRental()">Richiedi</button>
+  <div id="rResult" class="mt-2"></div>
+</div>
+
+<script>
+  const token = localStorage.getItem('manitech_token');
+  function requestRental(){
+    const m = document.getElementById('rMachine').value;
+    const s = document.getElementById('rStart').value;
+    const e = document.getElementById('rEnd').value;
+    google.script.run.withSuccessHandler(function(res){
+      document.getElementById('rResult').innerText = res.available ? 'Richiesta inviata' : 'Conflitto - non disponibile';
+    }).requestRental(token, m, s, e);
+  }
+</script>
