@@ -1,0 +1,16 @@
+<div class="card card-dark p-4">
+  <h3 style="color:#FFC400">Pannello Admin</h3>
+  <div class="row">
+    <div class="col-md-4"><div class="card card-dark p-3"><h5>Ticket aperti</h5><div id="cntTickets">...</div></div></div>
+    <div class="col-md-4"><div class="card card-dark p-3"><h5>Richieste noleggio</h5><div id="cntRentals">...</div></div></div>
+    <div class="col-md-4"><div class="card card-dark p-3"><h5>Work Orders</h5><div id="cntWO">...</div></div></div>
+  </div>
+  <hr>
+  <button class="btn btn-yellow" onclick="go('tickets')">Gestisci Ticket</button>
+  <button class="btn btn-yellow" onclick="go('admin_users')">Gestisci Utenti</button>
+</div>
+
+<script>
+const token = localStorage.getItem('manitech_token');
+google.script.run.withSuccessHandler(function(list){ document.getElementById('cntTickets').innerText = list.length; }).getTickets(token);
+</script>
