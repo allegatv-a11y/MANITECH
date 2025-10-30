@@ -1,0 +1,19 @@
+<div class="card card-dark p-3">
+  <h4 style="color:#FFC400">Gestione Utenti (Admin)</h4>
+  <div class="mb-2"><label>Email</label><input id="newUserEmail" class="form-control"></div>
+  <div class="mb-2"><label>Nome</label><input id="newUserName" class="form-control"></div>
+  <div class="mb-2"><label>Ruolo</label><select id="newUserRole" class="form-control"><option value="admin">Admin</option><option value="tecnico">Tecnico</option><option value="cliente">Cliente</option></select></div>
+  <div class="mb-2"><label>Password</label><input id="newUserPwd" type="password" class="form-control"></div>
+  <button class="btn btn-yellow" onclick="createUser()">Crea Utente</button>
+</div>
+
+<script>
+  const token = localStorage.getItem('manitech_token');
+  function createUser(){
+    const e = document.getElementById('newUserEmail').value;
+    const n = document.getElementById('newUserName').value;
+    const r = document.getElementById('newUserRole').value;
+    const p = document.getElementById('newUserPwd').value;
+    google.script.run.withSuccessHandler(function(res){ alert('Utente creato'); }).registerUser(token, e, n, r, p, '');
+  }
+</script>
