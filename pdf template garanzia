@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      color: #111;
+      margin: 20px;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      border-bottom: 4px solid #FFC400;
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+    }
+    .logo {
+      height: 60px;
+      margin-right: 15px;
+    }
+    .company-info {
+      flex: 1;
+    }
+    .company-name {
+      font-weight: 700;
+      font-size: 20px;
+      color: #111;
+    }
+    .meta {
+      font-size: 12px;
+      color: #555;
+      margin-top: 5px;
+    }
+    h2 {
+      color: #FFC400;
+      font-size: 16px;
+      margin-top: 20px;
+      margin-bottom: 10px;
+      border-bottom: 2px solid #FFC400;
+      padding-bottom: 5px;
+    }
+    .section {
+      margin-top: 12px;
+      margin-bottom: 15px;
+    }
+    .row {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 10px;
+    }
+    .col {
+      flex: 1;
+    }
+    .field {
+      margin-bottom: 10px;
+    }
+    .field-label {
+      font-weight: 700;
+      color: #333;
+      font-size: 11px;
+      margin-bottom: 3px;
+      text-transform: uppercase;
+    }
+    .field-value {
+      font-size: 13px;
+      color: #111;
+      padding: 8px;
+      background: #f5f5f5;
+      border-left: 3px solid #FFC400;
+      min-height: 25px;
+    }
+    .field-value-large {
+      font-size: 13px;
+      color: #111;
+      padding: 10px;
+      background: #f5f5f5;
+      border-left: 3px solid #FFC400;
+      min-height: 60px;
+      white-space: pre-wrap;
+    }
+    .status-box {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 12px;
+    }
+    .status-si {
+      background: #28a745;
+      color: white;
+    }
+    .status-no {
+      background: #dc3545;
+      color: white;
+    }
+    .status-parziale {
+      background: #ffc107;
+      color: black;
+    }
+    .allegati-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 15px;
+    }
+    .allegato-item {
+      text-align: center;
+      padding: 10px;
+      background: #f5f5f5;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    .allegato-item img {
+      max-width: 100%;
+      height: auto;
+      max-height: 150px;
+      border-radius: 4px;
+    }
+    .allegato-label {
+      font-size: 10px;
+      color: #666;
+      margin-top: 5px;
+    }
+    .firma-section {
+      margin-top: 30px;
+      padding: 15px;
+      background: #f9f9f9;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+    .firma-img {
+      max-width: 300px;
+      height: auto;
+      border: 1px solid #ccc;
+      padding: 5px;
+      background: white;
+    }
+    footer {
+      margin-top: 40px;
+      padding-top: 15px;
+      border-top: 1px solid #ddd;
+      font-size: 10px;
+      color: #888;
+      text-align: center;
+    }
+    .page-break {
+      page-break-after: always;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img class="logo" src="<?= meta.logoUrl ?>" alt="Logo" />
+    <div class="company-info">
+      <div class="company-name"><?= meta.company ?></div>
+      <div class="meta">Rapportino di Garanzia - ID: <?= meta.id ?></div>
+      <div class="meta">Data: <?= meta.createdAt ?></div>
+    </div>
+  </header>
+
+  <h2>Dati Macchina</h2>
+  <div class="section">
+    <div class="row">
+      <div class="col">
+        <div class="field">
+          <div class="field-label">Cliente</div>
+          <div class="field-value"><?= data.cliente ?></div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="field">
+          <div class="field-label">Marca</div>
+          <div class="field-value"><?= data.marca ?></div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col">
+        <div class="field">
+          <div class="field-label">Modello</div>
+          <div class="field-value"><?= data.modello ?></div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="field">
+          <div class="field-label">Matricola</div>
+          <div class="field-value"><?= data.matricola ?></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Intervento</h2>
+  <div class="section">
+    <div class="row">
+      <div class="col">
+        <div class="field">
+          <div class="field-label">Data Intervento</div>
+          <div class="field-value"><?= data.dataIntervento ?></div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="field">
+          <div class="field-label">Tecnico</div>
+          <div class="field-value"><?= data.tecnico ?></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="field-label">Difetto Riscontrato</div>
+      <div class="field-value-large"><?= data.difettoRiscontrato ?></div>
+    </div>
+
+    <? if (data.codiceErrore && data.codiceErrore !== '') { ?>
+    <div class="field">
+      <div class="field-label">Codice Errore</div>
+      <div class="field-value"><?= data.codiceErrore ?></div>
+    </div>
+    <? } ?>
+
+    <div class="field">
+      <div class="field-label">Azione Intrapresa</div>
+      <div class="field-value-large"><?= data.azioneIntrapresa ?></div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <div class="field">
+          <div class="field-label">Difetto Risolto</div>
+          <div class="field-value">
+            <? if (data.difettoRisolto === 'Sì') { ?>
+              <span class="status-box status-si">✓ SÌ</span>
+            <? } else if (data.difettoRisolto === 'Parzialmente') { ?>
+              <span class="status-box status-parziale">~ PARZIALMENTE</span>
+            <? } else { ?>
+              <span class="status-box status-no">✗ NO</span>
+            <? } ?>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <? if (data.oreMacchina && data.oreMacchina !== '') { ?>
+        <div class="field">
+          <div class="field-label">Ore Macchina</div>
+          <div class="field-value"><?= data.oreMacchina ?> h</div>
+        </div>
+        <? } ?>
+      </div>
+    </div>
+  </div>
+
+  <? if (data.allegati && data.allegati.length > 0) { ?>
+  <div class="page-break"></div>
+  <h2>Documentazione Fotografica/Video</h2>
+  <div class="allegati-grid">
+    <? for (var i = 0; i < data.allegati.length; i++) { ?>
+      <div class="allegato-item">
+        <? if (data.allegati[i].type === 'image') { ?>
+          <img src="https://drive.google.com/uc?id=<?= data.allegati[i].fileId ?>" alt="<?= data.allegati[i].name ?>">
+        <? } else { ?>
+          <div style="padding: 40px; background: #333; color: white; border-radius: 4px;">
+            <i class="fas fa-video" style="font-size: 40px;"></i>
+            <p style="margin-top: 10px; font-size: 11px;">VIDEO</p>
+          </div>
+        <? } ?>
+        <div class="allegato-label"><?= data.allegati[i].name ?></div>
+      </div>
+    <? } ?>
+  </div>
+  <? } ?>
+
+  <? if (data.firmaUrl && data.firmaUrl !== '') { ?>
+  <div class="firma-section">
+    <h3 style="margin-top: 0; color: #333; font-size: 14px;">Firma Tecnico</h3>
+    <img class="firma-img" src="<?= data.firmaUrl ?>" alt="Firma">
+  </div>
+  <? } ?>
+
+  <footer>
+    <p>Documento generato automaticamente dal sistema Manitech SRL</p>
+  </footer>
+</body>
+</html>
