@@ -1,0 +1,73 @@
+<div class="card-futuristic">
+  <h1 class="card-title"><i class="fas fa-book"></i> MANUALI PDF</h1>
+  <p style="color:#888;margin-bottom:30px;font-weight:600;letter-spacing:1px;font-size:1rem">
+    <i class="fas fa-folder-open"></i> File dalla cartella Drive <span style="color:var(--gold)">"macchine industriali"</span>
+  </p>
+  
+  <div id="manualsList">
+    <p style="text-align:center;padding:40px;color:#888;font-weight:700">
+      <i class="fas fa-spinner fa-spin"></i> CARICAMENTO MANUALI...
+    </p>
+  </div>
+</div>
+
+<script>
+const token = localStorage.getItem('manitech_token');
+
+function loadManuals(){
+  document.getElementById('manualsList').innerHTML = 
+    '<p style="text-align:center;padding:40px;color:#888;font-weight:700"><i class="fas fa-spinner fa-spin"></i> CARICAMENTO...</p>';
+  
+  google.script.run
+    .withSuccessHandler(function(manuals){
+      const listDiv = document.getElementById('manualsList');
+      
+      console.log('✅ Manuali ricevuti:', manuals.length);
+      
+      if(manuals.length === 0){
+        listDiv.innerHTML = 
+          '<div class="alert alert-warning" style="text-align:center;background:rgba(255,170,0,0.1)!important;border:1px solid rgba(255,170,0,0.3)!important"><i class="fas fa-info-circle"></i> <strong>Nessun PDF trovato</strong></div>';
+        return;
+      }
+      
+      let html = '<div class="row">';
+      
+      manuals.forEach(function(manual){
+        html += `
+          <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card-futuristic" style="padding:25px;text-align:center;height:100%;display:flex;flex-direction:column;justify-content:space-between">
+              <div>
+                <i class="fas fa-file-pdf" style="font-size:3.5rem;color:#ff4444;margin-bottom:20px;filter:drop-shadow(0 0 15px rgba(255,68,68,0.5))"></i>
+                <h6 style="color:#fff;font-weight:800;margin-bottom:12px;font-family:Orbitron,sans-serif;letter-spacing:1px;font-size:0.85rem;line-height:1.4;min-height:50px">${manual.title}</h6>
+                <p style="color:#888;font-size:0.75rem;margin-bottom:8px;font-weight:600;line-height:1.3">
+                  <i class="fas fa-folder"></i> ${manual.desc || ''}
+                </p>
+                <p style="color:var(--gold);font-size:0.75rem;margin-bottom:20px;font-weight:700;font-family:Orbitron,sans-serif">${manual.size || ''}</p>
+              </div>
+              <a href="https://drive.google.com/file/d/${manual.fileId}/view" target="_blank" class="btn-gold" style="display:inline-block;padding:12px 20px;font-size:0.85rem">
+                <i class="fas fa-external-link-alt"></i> APRI PDF
+              </a>
+            </div>
+          </div>
+        `;
+      });
+      
+      html += '</div>';
+      
+      html += '<div style="text-align:center;margin-top:30px;padding-top:30px;border-top:1px solid rgba(255,196,0,0.2)">';
+      html += '<p style="color:#666;font-size:0.85rem;font-weight:600"><i class="fas fa-info-circle"></i> Totale: <span style="color:var(--gold);font-weight:800">' + manuals.length + '</span> documenti PDF</p>';
+      html += '</div>';
+      
+      listDiv.innerHTML = html;
+    })
+    .withFailureHandler(function(error){
+      console.error('❌ Errore caricamento manuali:', error);
+      
+      document.getElementById('manualsList').innerHTML = 
+        '<div class="alert alert-danger"><i class="fas fa-exclamation-circle"></i> <strong>Errore caricamento manuali</strong><br><small>' + error.message + '</small></div>';
+    })
+    .listManualsFromDrive(token);
+}
+
+loadManuals();
+</script>
