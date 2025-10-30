@@ -1,0 +1,3962 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+
+    :root{
+      --gold:#FFC400;
+      --gold-dark:#FFB000;
+      --gold-light:#FFD84D;
+      --bg-main:#0a0a0a;
+      --bg-card:#111111;
+      --border:#1a1a1a;
+    }
+
+    *{margin:0;padding:0;box-sizing:border-box}
+
+    body{
+      font-family:'Rajdhani',sans-serif;
+      background:#0a0a0a;
+      color:#fff;
+      overflow-x:hidden;
+      position:relative;
+    }
+
+    /* Circuit pattern background */
+    body::before{
+      content:'';
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background-image:
+        linear-gradient(90deg, rgba(255,196,0,0.03) 1px, transparent 1px),
+        linear-gradient(rgba(255,196,0,0.03) 1px, transparent 1px);
+      background-size:50px 50px;
+      pointer-events:none;
+      z-index:0;
+    }
+
+    body::after{
+      content:'';
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background:
+        radial-gradient(circle at 10% 20%, rgba(255,196,0,0.08) 0%, transparent 50%),
+        radial-gradient(circle at 90% 80%, rgba(255,196,0,0.05) 0%, transparent 50%);
+      pointer-events:none;
+      z-index:0;
+    }
+
+    .sidebar{
+      width:280px;
+      background:linear-gradient(180deg, #0d0d0d 0%, #080808 100%);
+      position:fixed;
+      height:100vh;
+      padding:0;
+      border-right:2px solid rgba(255,196,0,0.2);
+      overflow-y:auto;
+      z-index:1000;
+      box-shadow:4px 0 40px rgba(255,196,0,0.15);
+    }
+
+    .sidebar::-webkit-scrollbar{width:4px}
+    .sidebar::-webkit-scrollbar-track{background:#0a0a0a}
+    .sidebar::-webkit-scrollbar-thumb{background:var(--gold);border-radius:4px}
+
+    .logo-container{
+      padding:30px 20px;
+      border-bottom:1px solid rgba(255,196,0,0.2);
+      background:linear-gradient(135deg, rgba(255,196,0,0.15) 0%, transparent 100%);
+      position:relative;
+    }
+
+    .logo-container::before{
+      content:'';
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:2px;
+      background:linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+
+    .logo{
+      font-family:'Orbitron',sans-serif;
+      font-weight:900;
+      font-size:1.9rem;
+      color:var(--gold);
+      text-align:center;
+      letter-spacing:4px;
+      text-shadow:0 0 30px rgba(255,196,0,0.8), 0 0 60px rgba(255,196,0,0.4);
+      margin-bottom:8px;
+      animation:pulse 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse{
+      0%, 100%{text-shadow:0 0 30px rgba(255,196,0,0.8), 0 0 60px rgba(255,196,0,0.4)}
+      50%{text-shadow:0 0 40px rgba(255,196,0,1), 0 0 80px rgba(255,196,0,0.6)}
+    }
+
+    .logo-subtitle{
+      font-size:0.7rem;
+      text-align:center;
+      color:#888;
+      font-weight:300;
+      letter-spacing:4px;
+      text-transform:uppercase;
+    }
+
+    .nav-section{padding:25px 0}
+
+    .nav-item{
+      color:#888;
+      padding:16px 25px;
+      display:flex;
+      align-items:center;
+      cursor:pointer;
+      text-decoration:none;
+      transition:all 0.3s cubic-bezier(0.4,0,0.2,1);
+      position:relative;
+      font-size:1rem;
+      font-weight:600;
+      border-left:3px solid transparent;
+      margin:4px 0;
+    }
+
+    .nav-item::before{
+      content:'';
+      position:absolute;
+      left:0;
+      top:0;
+      width:0;
+      height:100%;
+      background:linear-gradient(90deg, rgba(255,196,0,0.2), transparent);
+      transition:width 0.3s;
+    }
+
+    .nav-item::after{
+      content:'';
+      position:absolute;
+      right:20px;
+      top:50%;
+      transform:translateY(-50%);
+      width:6px;
+      height:6px;
+      background:transparent;
+      border-radius:50%;
+      transition:all 0.3s;
+    }
+
+    .nav-item:hover{
+      color:var(--gold);
+      background:rgba(255,196,0,0.08);
+      border-left-color:var(--gold);
+      padding-left:30px;
+    }
+
+    .nav-item:hover::before{width:100%}
+    .nav-item:hover::after{background:var(--gold);box-shadow:0 0 10px var(--gold)}
+
+    .nav-item.active{
+      color:var(--gold);
+      background:linear-gradient(90deg, rgba(255,196,0,0.15), rgba(255,196,0,0.05));
+      border-left-color:var(--gold);
+      font-weight:700;
+    }
+
+    .nav-item.active::after{
+      background:var(--gold);
+      box-shadow:0 0 10px var(--gold);
+    }
+
+    .nav-item i{
+      margin-right:15px;
+      font-size:1.2rem;
+      width:24px;
+      text-align:center;
+    }
+
+    .user-panel{
+      position:absolute;
+      bottom:0;
+      left:0;
+      right:0;
+      padding:20px;
+      border-top:1px solid rgba(255,196,0,0.2);
+      background:linear-gradient(180deg, transparent, rgba(17,17,17,0.95));
+      backdrop-filter:blur(10px);
+    }
+
+    .user-info{
+      display:flex;
+      align-items:center;
+      margin-bottom:15px;
+      padding:12px;
+      background:rgba(255,196,0,0.05);
+      border-radius:8px;
+      border:1px solid rgba(255,196,0,0.1);
+    }
+
+    .user-avatar{
+      width:42px;
+      height:42px;
+      border-radius:50%;
+      background:linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:900;
+      margin-right:12px;
+      font-family:'Orbitron',sans-serif;
+      color:#000;
+      font-size:1.1rem;
+      box-shadow:0 0 20px rgba(255,196,0,0.5);
+    }
+
+    .user-details{flex:1}
+    .user-name{font-size:0.95rem;font-weight:700;color:#fff;margin-bottom:2px}
+    .user-role{font-size:0.7rem;color:var(--gold);text-transform:uppercase;letter-spacing:2px}
+
+    .btn-logout{
+      width:100%;
+      padding:12px;
+      background:transparent;
+      border:1px solid #333;
+      color:#888;
+      font-size:0.85rem;
+      font-weight:700;
+      letter-spacing:1px;
+      cursor:pointer;
+      transition:all 0.3s;
+      text-transform:uppercase;
+      border-radius:6px;
+    }
+
+    .btn-logout:hover{
+      background:rgba(255,50,50,0.15);
+      border-color:#ff3232;
+      color:#ff3232;
+      box-shadow:0 0 15px rgba(255,50,50,0.3);
+    }
+
+    .content{
+      margin-left:280px;
+      padding:30px;
+      min-height:100vh;
+      position:relative;
+      z-index:1;
+    }
+
+    .content-section {
+      display:none;
+      width:100%;
+      min-height:100vh;
+    }
+
+    .card-futuristic{
+      background:linear-gradient(145deg, #0f0f0f 0%, #0a0a0a 100%);
+      border:1px solid rgba(255,196,0,0.2);
+      border-radius:16px;
+      padding:30px;
+      transition:all 0.4s cubic-bezier(0.4,0,0.2,1);
+      position:relative;
+      overflow:hidden;
+      box-shadow:0 4px 20px rgba(0,0,0,0.5);
+    }
+
+    .card-futuristic::before{
+      content:'';
+      position:absolute;
+      top:0;
+      left:0;
+      right:0;
+      height:2px;
+      background:linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+
+    .card-futuristic::after{
+      content:'';
+      position:absolute;
+      top:-50%;
+      left:-50%;
+      width:200%;
+      height:200%;
+      background:radial-gradient(circle, rgba(255,196,0,0.08) 0%, transparent 70%);
+      opacity:0;
+      transition:opacity 0.4s;
+      pointer-events:none;
+    }
+
+    .card-futuristic:hover{
+      border-color:var(--gold);
+      box-shadow:0 8px 40px rgba(255,196,0,0.2);
+      transform:translateY(-3px);
+    }
+
+    .card-futuristic:hover::after{opacity:1}
+
+    .card-title{
+      font-family:'Orbitron',sans-serif;
+      font-size:1.6rem;
+      font-weight:900;
+      color:var(--gold);
+      margin-bottom:20px;
+      text-transform:uppercase;
+      letter-spacing:3px;
+      text-shadow:0 0 20px rgba(255,196,0,0.5);
+    }
+
+    .btn-gold{
+      background:linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+      color:#000;
+      border:none;
+      padding:14px 32px;
+      font-weight:900;
+      font-size:0.9rem;
+      letter-spacing:2px;
+      text-transform:uppercase;
+      cursor:pointer;
+      transition:all 0.3s;
+      border-radius:8px;
+      box-shadow:0 4px 20px rgba(255,196,0,0.4);
+      font-family:'Orbitron',sans-serif;
+    }
+
+    .btn-gold:hover{
+      transform:translateY(-3px) scale(1.02);
+      box-shadow:0 8px 30px rgba(255,196,0,0.6);
+    }
+
+    .btn-gold:active{
+      transform:translateY(-1px);
+    }
+
+    .table-futuristic{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0 10px;
+    }
+
+    .table-futuristic thead th{
+      background:linear-gradient(135deg, rgba(255,196,0,0.2) 0%, rgba(255,196,0,0.1) 100%);
+      color:var(--gold);
+      padding:18px;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:2px;
+      font-size:0.8rem;
+      border:none;
+      font-family:'Orbitron',sans-serif;
+    }
+
+    .table-futuristic tbody tr{
+      background:linear-gradient(145deg, #0f0f0f 0%, #0a0a0a 100%);
+      transition:all 0.3s;
+      border:1px solid transparent;
+    }
+
+    .table-futuristic tbody tr:hover{
+      background:linear-gradient(145deg, #161616 0%, #111111 100%);
+      box-shadow:0 4px 25px rgba(255,196,0,0.15);
+      transform:scale(1.005);
+      border-color:rgba(255,196,0,0.3);
+    }
+
+    .table-futuristic tbody td{
+      padding:18px;
+      border-top:1px solid rgba(255,196,0,0.1);
+      border-bottom:1px solid rgba(255,196,0,0.1);
+      color:#ccc;
+      font-size:0.95rem;
+      font-weight:500;
+    }
+
+    .table-futuristic tbody td:first-child{
+      border-left:1px solid rgba(255,196,0,0.1);
+      border-top-left-radius:10px;
+      border-bottom-left-radius:10px;
+    }
+
+    .table-futuristic tbody td:last-child{
+      border-right:1px solid rgba(255,196,0,0.1);
+      border-top-right-radius:10px;
+      border-bottom-right-radius:10px;
+    }
+
+    .badge{
+      padding:8px 16px;
+      border-radius:20px;
+      font-weight:800;
+      font-size:0.75rem;
+      letter-spacing:1px;
+      text-transform:uppercase;
+      font-family:'Orbitron',sans-serif;
+    }
+
+    .badge.bg-success{
+      background:linear-gradient(135deg, #00ff88 0%, #00cc6a 100%)!important;
+      color:#000!important;
+      box-shadow:0 2px 10px rgba(0,255,136,0.3);
+    }
+
+    .badge.bg-warning{
+      background:linear-gradient(135deg, #ffaa00 0%, #ff8800 100%)!important;
+      color:#000!important;
+      box-shadow:0 2px 10px rgba(255,170,0,0.3);
+    }
+
+    .badge.bg-danger{
+      background:linear-gradient(135deg, #ff3232 0%, #dd0000 100%)!important;
+      color:#fff!important;
+      box-shadow:0 2px 10px rgba(255,50,50,0.3);
+    }
+
+    .badge.bg-secondary{
+      background:#333!important;
+      color:#999!important;
+    }
+
+    .badge.bg-info{
+      background:linear-gradient(135deg, #00d4ff 0%, #0099cc 100%)!important;
+      color:#000!important;
+      box-shadow:0 2px 10px rgba(0,212,255,0.3);
+    }
+
+    .form-control{
+      background:#0d0d0d!important;
+      border:1px solid rgba(255,196,0,0.2)!important;
+      color:#fff!important;
+      padding:14px 20px!important;
+      border-radius:8px!important;
+      font-size:0.95rem!important;
+      transition:all 0.3s!important;
+    }
+
+    .form-control:focus{
+      outline:none!important;
+      border-color:var(--gold)!important;
+      box-shadow:0 0 0 4px rgba(255,196,0,0.15)!important;
+      background:#111!important;
+    }
+
+    .form-control::placeholder{color:#555!important}
+
+    .pagination .page-link{
+      background:#111!important;
+      border:1px solid rgba(255,196,0,0.2)!important;
+      color:#888!important;
+      font-weight:700!important;
+      padding:10px 18px!important;
+      font-family:'Orbitron',sans-serif!important;
+      font-size:0.85rem!important;
+    }
+
+    .pagination .page-link:hover{
+      background:#1a1a1a!important;
+      border-color:var(--gold)!important;
+      color:var(--gold)!important;
+      box-shadow:0 0 15px rgba(255,196,0,0.2)!important;
+    }
+
+    .pagination .page-item.active .page-link{
+      background:linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%)!important;
+      border-color:var(--gold)!important;
+      color:#000!important;
+      box-shadow:0 4px 20px rgba(255,196,0,0.4)!important;
+    }
+
+    .btn-success{
+      background:linear-gradient(135deg, #00ff88 0%, #00cc6a 100%)!important;
+      border:none!important;
+      color:#000!important;
+      font-weight:800!important;
+      padding:10px 20px!important;
+      box-shadow:0 2px 15px rgba(0,255,136,0.3)!important;
+      font-family:'Orbitron',sans-serif!important;
+      font-size:0.8rem!important;
+      text-transform:uppercase!important;
+      letter-spacing:1px!important;
+    }
+
+    .btn-success:hover{
+      box-shadow:0 4px 20px rgba(0,255,136,0.5)!important;
+      transform:translateY(-2px)!important;
+    }
+
+    .btn-danger{
+      background:linear-gradient(135deg, #ff3232 0%, #dd0000 100%)!important;
+      border:none!important;
+      font-weight:800!important;
+      padding:10px 20px!important;
+      box-shadow:0 2px 15px rgba(255,50,50,0.3)!important;
+      font-family:'Orbitron',sans-serif!important;
+      font-size:0.8rem!important;
+      text-transform:uppercase!important;
+      letter-spacing:1px!important;
+    }
+
+    .btn-danger:hover{
+      box-shadow:0 4px 20px rgba(255,50,50,0.5)!important;
+      transform:translateY(-2px)!important;
+    }
+
+    .btn-warning{
+      background:linear-gradient(135deg, #ffaa00 0%, #ff8800 100%)!important;
+      border:none!important;
+      color:#000!important;
+      font-weight:800!important;
+      padding:10px 20px!important;
+      box-shadow:0 2px 15px rgba(255,170,0,0.3)!important;
+      font-family:'Orbitron',sans-serif!important;
+      font-size:0.8rem!important;
+      text-transform:uppercase!important;
+      letter-spacing:1px!important;
+    }
+
+    .btn-warning:hover{
+      box-shadow:0 4px 20px rgba(255,170,0,0.5)!important;
+      transform:translateY(-2px)!important;
+    }
+
+    .btn-yellow {
+      background:linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%)!important;
+      border:none!important;
+      color:#000!important;
+      font-weight:800!important;
+    }
+
+    /* Login container */
+    .login-container{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:radial-gradient(ellipse at center, rgba(255,196,0,0.1) 0%, transparent 60%);
+    }
+
+    .login-container.hidden {
+      display: none !important;
+    }
+
+    .login-box{
+      background:linear-gradient(145deg, #111111 0%, #0a0a0a 100%);
+      border:2px solid rgba(255,196,0,0.3);
+      border-radius:20px;
+      padding:50px;
+      max-width:480px;
+      width:100%;
+      box-shadow:0 20px 80px rgba(0,0,0,0.8), 0 0 100px rgba(255,196,0,0.1);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .login-box::before{
+      content:'';
+      position:absolute;
+      top:0;
+      left:0;
+      right:0;
+      height:4px;
+      background:linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+
+    .login-box::after{
+      content:'';
+      position:absolute;
+      bottom:0;
+      left:0;
+      right:0;
+      height:4px;
+      background:linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+
+    .login-title{
+      font-family:'Orbitron',sans-serif;
+      font-size:2.5rem;
+      font-weight:900;
+      color:var(--gold);
+      text-align:center;
+      margin-bottom:10px;
+      letter-spacing:6px;
+      text-shadow:0 0 40px rgba(255,196,0,0.8);
+    }
+
+    .login-subtitle{
+      text-align:center;
+      color:#666;
+      font-size:0.85rem;
+      margin-bottom:40px;
+      letter-spacing:4px;
+      text-transform:uppercase;
+      font-weight:600;
+    }
+
+    .alert{
+      border-radius:10px!important;
+      border:1px solid rgba(255,196,0,0.2)!important;
+      font-weight:600!important;
+    }
+
+    /* Modal Styles */
+    #newTicketModal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      z-index: 1050;
+      opacity: 0;
+      transition: opacity 0.2s ease-in-out;
+    }
+
+    #newTicketModal.is-visible {
+      display: flex !important;
+      opacity: 1 !important;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #newTicketModal .modal-dialog {
+      z-index: 1060;
+      transform: scale(0.95);
+      transition: transform 0.2s ease-in-out;
+    }
+
+    #newTicketModal.is-visible .modal-dialog {
+      transform: scale(1);
+    }
+
+    .ticket-card {
+      background: #1a1a1a;
+      border: 1px solid rgba(255, 196, 0, 0.2);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 15px;
+      transition: all 0.3s ease;
+    }
+
+    .ticket-card:hover {
+      border-color: rgba(255, 196, 0, 0.5);
+      box-shadow: 0 4px 15px rgba(255, 196, 0, 0.1);
+    }
+
+    .ticket-badge {
+      display: inline-block;
+      padding: 5px 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .ticket-badge.aperto {
+      background: #dc3545;
+      color: #fff;
+    }
+
+    .ticket-badge.in_lavorazione {
+      background: #ffc107;
+      color: #000;
+    }
+
+    .ticket-badge.chiuso {
+      background: #28a745;
+      color: #fff;
+    }
+
+    @media(max-width:768px){
+      .sidebar{width:80px}
+      .logo{font-size:1.2rem;letter-spacing:1px}
+      .logo-subtitle{display:none}
+      .nav-item span{display:none}
+      .nav-item i{margin-right:0}
+      .user-details{display:none}
+      .user-avatar{margin-right:0}
+      .content{margin-left:80px;padding:15px}
+    }
+    /* Modal per Verifiche e Garanzie */
+.modal-verifiche, .modal-garanzia {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 2000;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.modal-verifiche.is-visible, .modal-garanzia.is-visible {
+  display: flex !important;
+  opacity: 1 !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-verifiche .modal-dialog, .modal-garanzia .modal-dialog {
+  max-width: 700px;
+  width: 90%;
+  transform: scale(0.95);
+  transition: transform 0.3s ease-in-out;
+}
+
+.modal-verifiche.is-visible .modal-dialog, .modal-garanzia.is-visible .modal-dialog {
+  transform: scale(1);
+}
+
+  </style>
+  <title>Manitech SRL</title>
+</head>
+<body>
+  <div class="sidebar" id="sidebar" style="display:none">
+    <div class="logo-container">
+      <div class="logo">MANITECH</div>
+      <div class="logo-subtitle">SYSTEM v2.0</div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-item" onclick="showDashboard()">
+        <i class="fas fa-home"></i>
+        <span>Dashboard</span>
+      </div>
+      <div class="nav-item" onclick="showMachines()">
+        <i class="fas fa-cogs"></i>
+        <span>Macchine</span>
+      </div>
+      <div class="nav-item" onclick="showRentals()">
+        <i class="fas fa-calendar-alt"></i>
+        <span>Noleggi</span>
+      </div>
+      <div class="nav-item" onclick="showTickets()" data-role="tecnico,admin">
+        <i class="fas fa-ticket-alt"></i>
+        <span>Assistenza</span>
+      </div>
+      <div class="nav-item" onclick="showVerifiche()">
+        <i class="fas fa-clipboard-check"></i>
+        <span>Verifiche</span>
+      </div>
+      <div class="nav-item" onclick="showManuals()">
+        <i class="fas fa-book"></i>
+        <span>Manuali</span>
+      </div>
+      <div class="nav-item" onclick="showUsers()">
+        <i class="fas fa-users-cog"></i>
+        <span>Utenti</span>
+      </div>
+    </div>
+
+    <div class="user-panel">
+      <div class="user-info">
+        <div class="user-avatar">M</div>
+        <div class="user-details">
+          <div class="user-name" id="userName">Utente</div>
+          <div class="user-role" id="userRole">Guest</div>
+        </div>
+      </div>
+      <button class="btn-logout" onclick="logout()">
+        <i class="fas fa-sign-out-alt"></i> 
+        <span>Logout</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="content" id="mainContent">
+    <!-- SEZIONE LOGIN -->
+    <div class="login-container" id="loginContainer">
+      <div class="login-box">
+        <div class="login-title">MANITECH</div>
+        <div class="login-subtitle">System Access</div>
+
+        <div style="margin-bottom:22px">
+          <label style="color:#888;font-size:0.8rem;margin-bottom:10px;display:block;text-transform:uppercase;letter-spacing:2px;font-weight:700">Email</label>
+          <input id="loginEmail" class="form-control" type="email" placeholder="your@email.com">
+        </div>
+
+        <div style="margin-bottom:28px">
+          <label style="color:#888;font-size:0.8rem;margin-bottom:10px;display:block;text-transform:uppercase;letter-spacing:2px;font-weight:700">Password</label>
+          <input id="loginPwd" class="form-control" type="password" placeholder="••••••••">
+        </div>
+
+        <button class="btn-gold" style="width:100%;font-size:1rem" onclick="login()">
+          <i class="fas fa-lock-open"></i> ACCESS SYSTEM
+        </button>
+
+        <div id="loginError" style="margin-top:25px;color:#ff3232;text-align:center;font-size:0.9rem;font-weight:700"></div>
+      </div>
+    </div>
+
+    <!-- SEZIONE DASHBOARD -->
+    <div id="dashboardSection" class="content-section"></div>
+
+    <!-- SEZIONE MACCHINE -->
+    <div id="machinesSection" class="content-section"></div>
+
+    <!-- SEZIONE NOLEGGI -->
+    <div id="rentalsSection" class="content-section"></div>
+
+    <!-- SEZIONE ASSISTENZA/TICKETS -->
+    <div id="ticketsSection" class="content-section"></div>
+
+    <!-- SEZIONE VERIFICHE/FORMS -->
+    <div id="formsSection" class="content-section"></div>
+
+    <!-- SEZIONE MANUALI -->
+    <div id="manualsSection" class="content-section"></div>
+
+    <!-- SEZIONE UTENTI -->
+    <div id="usersSection" class="content-section"></div>
+  </div>
+
+  <!-- MODALE TICKET -->
+  <div class="modal" id="newTicketModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content" style="background: #0f0f0f; border: 1px solid rgba(255,196,0,0.3);">
+        <div class="modal-header" style="border-bottom: 1px solid rgba(255,196,0,0.2);">
+          <h5 class="modal-title" style="color: var(--gold);">
+            <i class="fas fa-ticket-alt"></i> Apri Ticket Assistenza
+          </h5>
+          <button type="button" class="btn-close btn-close-white" onclick="hideNewTicketModal()"></button>
+        </div>
+        
+        <div class="modal-body">
+          <form id="newTicketForm">
+            <div class="mb-3">
+              <label class="form-label" style="color: #888; font-weight: 600;">
+                <i class="fas fa-cog"></i> Macchina
+              </label>
+              <input type="text" class="form-control" id="ticketMachineInfo" readonly 
+                     style="background: #1a1a1a; border: 1px solid #333; color: #fff; cursor: not-allowed;">
+              <input type="hidden" id="ticketMachineId">
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label" style="color: #888; font-weight: 600;">
+                <i class="fas fa-building"></i> Cliente
+              </label>
+              <input type="text" class="form-control" id="ticketClientInfo" readonly 
+                     style="background: #1a1a1a; border: 1px solid #333; color: #fff; cursor: not-allowed;">
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label" style="color: #888; font-weight: 600;">
+                <i class="fas fa-exclamation-triangle"></i> Difetto Riscontrato *
+              </label>
+              <textarea class="form-control" id="ticketDescription" rows="5" 
+                        placeholder="Descrivi il problema riscontrato sulla macchina..."
+                        style="background: #1a1a1a; border: 1px solid #444; color: #fff;"
+                        required></textarea>
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label" style="color: #888; font-weight: 600;">
+                <i class="fas fa-user"></i> Tecnico
+              </label>
+              <input type="text" class="form-control" id="ticketCreatedBy" readonly 
+                     style="background: #1a1a1a; border: 1px solid #333; color: #fff; cursor: not-allowed;">
+            </div>
+            
+            <div id="ticketError" class="alert alert-danger" style="display: none;"></div>
+          </form>
+        </div>
+        
+        <div class="modal-footer" style="border-top: 1px solid rgba(255,196,0,0.2);">
+          <button type="button" class="btn btn-secondary" onclick="hideNewTicketModal()">
+            <i class="fas fa-times"></i> Annulla
+          </button>
+          <button type="button" class="btn btn-yellow" onclick="submitTicket()">
+            <i class="fas fa-paper-plane"></i> Invia Ticket
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- MODALE CHECKLIST TECNICA -->
+<!-- MODALE RAPPORTO CONTROLLO PERIODICO -->
+<div class="modal-verifiche" id="verificaModal" tabindex="-1">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content" style="background: #0f0f0f; border: 1px solid rgba(255,196,0,0.3);">
+      <div class="modal-header" style="border-bottom: 1px solid rgba(255,196,0,0.2);">
+        <h5 class="modal-title" style="color: var(--gold);"><i class="fas fa-clipboard-check"></i> Rapporto di Controllo Periodico</h5>
+        <button type="button" class="btn-close btn-close-white" onclick="hideVerificaModal()"></button>
+      </div>
+      
+      <div class="modal-body" style="max-height: 75vh; overflow-y: auto;">
+        <form id="verificaForm">
+          <!-- DATI CLIENTE E MACCHINA -->
+          <div id="verificaDatiGenerali"></div>
+          
+          <!-- CHECKLISTS -->
+          <div id="checklist-sections"></div>
+
+          <!-- NOTE -->
+          <div class="mt-4">
+            <h6 style="color: var(--gold);">📝 NOTE</h6>
+            <textarea class="form-control" id="verificaNoteGenerali" rows="3" placeholder="Note generali sull'intervento..." style="background: #1a1a1a; border: 1px solid #444; color: #fff;"></textarea>
+          </div>
+
+          <!-- RICAMBI -->
+          <div class="mt-4">
+            <h6 style="color: var(--gold);">📦 RICAMBI</h6>
+            <div id="ricambi-container"></div>
+            <button type="button" class="btn btn-sm btn-outline-success mt-2" onclick="addRicambioItem()"><i class="fas fa-plus"></i> Aggiungi Ricambio</button>
+          </div>
+          
+          <!-- FIRME -->
+          <div class="row mt-4">
+            <div class="col-md-6">
+              <h6 style="color: var(--gold);">✍️ Firma Tecnico</h6>
+              <div style="border: 2px solid #444; background: white; border-radius: 8px;"><canvas id="firmaTecnicoPad" width="500" height="150"></canvas></div>
+              <button type="button" class="btn btn-sm btn-secondary mt-2" onclick="clearFirma('tecnico')">Cancella</button>
+            </div>
+            <div class="col-md-6">
+              <h6 style="color: var(--gold);">✍️ Firma Cliente</h6>
+              <div style="border: 2px solid #444; background: white; border-radius: 8px;"><canvas id="firmaClientePad" width="500" height="150"></canvas></div>
+              <button type="button" class="btn btn-sm btn-secondary mt-2" onclick="clearFirma('cliente')">Cancella</button>
+            </div>
+          </div>
+          
+          <div id="verificaError" class="alert alert-danger mt-3" style="display: none;"></div>
+        </form>
+      </div>
+      
+      <div class="modal-footer" style="border-top: 1px solid rgba(255,196,0,0.2);">
+        <button type="button" class="btn btn-secondary" onclick="hideVerificaModal()">Annulla</button>
+        <button type="button" class="btn btn-yellow" onclick="submitVerifica()">Genera PDF</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<style>
+  .checklist-title { color: var(--gold); margin-top: 25px; margin-bottom: 15px; font-family: 'Orbitron', sans-serif; }
+  .field-label { color: #888; }
+  .field-value { color: #fff; font-weight: bold; }
+  .checklist-table { width: 100%; }
+  .checklist-table td { padding: 4px; vertical-align: middle; }
+  .checklist-table input[type="radio"] { transform: scale(1.2); }
+  .signature-pad-container { border: 2px solid #444; background: white; border-radius: 8px; }
+</style>
+
+
+
+<!-- MODALE GARANZIA -->
+<!-- MODALE GARANZIA COMPLETA -->
+<!-- MODALE GARANZIA -->
+<div class="modal-garanzia" id="garanziaModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" style="background: #0f0f0f; border: 1px solid rgba(255,196,0,0.3);">
+      <div class="modal-header" style="border-bottom: 1px solid rgba(255,196,0,0.2);">
+        <h5 class="modal-title" style="color: var(--gold);">
+          <i class="fas fa-shield-alt"></i> Rapportino Garanzia
+        </h5>
+        <button type="button" class="btn-close btn-close-white" onclick="hideGaranziaModal()"></button>
+      </div>
+      
+      <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+        <form id="garanziaForm">
+          <!-- DATI AUTOMATICI (READONLY) -->
+          <h6 style="color: var(--gold); margin-bottom: 15px; border-bottom: 1px solid rgba(255,196,0,0.3); padding-bottom: 8px;">
+            <i class="fas fa-info-circle"></i> Dati Automatici
+          </h6>
+          
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label" style="color: #888; font-weight: 600;">Cliente</label>
+              <input type="text" class="form-control" id="garanziaCliente" readonly 
+                     style="background: #1a1a1a; border: 1px solid #333; color: #fff; cursor: not-allowed;">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label" style="color: #888; font-weight: 600;">Marca</label>
+              <input type="text" class="form-control" id="garanziaMarca" readonly 
+                     style="background: #1a1a1a; border: 1px solid #333; color: #fff; cursor: not-allowed;">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label" style="color: #888; font-weight: 600;">Modello</label>
+              <input type="text" class="form-control" id="garanziaModello" readonly 
+                     style="background: #1a1a1a; border: 1px solid #333; color: #fff; cursor: not-allowed;">
+              <input type="hidden" id="garanziaMachineId">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label" style="color: #888; font-weight: 600;">Matricola</label>
+              <input type="text" class="form-control" id="garanziaMatricola" readonly 
+                     style="background: #1a1a1a; border: 1px solid #333; color: #fff; cursor: not-allowed;">
+            </div>
+          </div>
+
+          <!-- DATI DA COMPILARE -->
+          <h6 style="color: var(--gold); margin-top: 25px; margin-bottom: 15px; border-bottom: 1px solid rgba(255,196,0,0.3); padding-bottom: 8px;">
+            <i class="fas fa-edit"></i> Dati da Compilare
+          </h6>
+
+          <div class="mb-3">
+            <label class="form-label" style="color: #888; font-weight: 600;">
+              <i class="fas fa-exclamation-triangle"></i> Difetto Riscontrato *
+            </label>
+            <textarea class="form-control" id="garanziaDifetto" rows="4" 
+                      placeholder="Descrivi il difetto riscontrato..."
+                      style="background: #1a1a1a; border: 1px solid #444; color: #fff;"
+                      required></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" style="color: #888; font-weight: 600;">
+              <i class="fas fa-code"></i> Codice Errore
+            </label>
+            <input type="text" class="form-control" id="garanziaCodiceErrore" 
+                   placeholder="Es: E001, ERR-123"
+                   style="background: #1a1a1a; border: 1px solid #444; color: #fff;">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" style="color: #888; font-weight: 600;">
+              <i class="fas fa-wrench"></i> Azione Intrapresa *
+            </label>
+            <textarea class="form-control" id="garanziaAzione" rows="4" 
+                      placeholder="Descrivi l'azione intrapresa per risolvere il problema..."
+                      style="background: #1a1a1a; border: 1px solid #444; color: #fff;"
+                      required></textarea>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label" style="color: #888; font-weight: 600;">
+                <i class="fas fa-check-circle"></i> Difetto Risolto? *
+              </label>
+              <select class="form-control" id="garanziaDifettoRisolto" 
+                      style="background: #1a1a1a; border: 1px solid #444; color: #fff;">
+                <option value="No">No</option>
+                <option value="Sì">Sì</option>
+                <option value="Parzialmente">Parzialmente</option>
+              </select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label" style="color: #888; font-weight: 600;">
+                <i class="fas fa-clock"></i> Ore Macchina
+              </label>
+              <input type="number" class="form-control" id="garanziaOreMacchina" 
+                     placeholder="Ore contatore"
+                     style="background: #1a1a1a; border: 1px solid #444; color: #fff;">
+            </div>
+          </div>
+
+          <!-- ALLEGATI FOTO/VIDEO -->
+          <h6 style="color: var(--gold); margin-top: 25px; margin-bottom: 15px; border-bottom: 1px solid rgba(255,196,0,0.3); padding-bottom: 8px;">
+            <i class="fas fa-camera"></i> Documentazione Fotografica/Video
+          </h6>
+
+          <div class="mb-3">
+            <label class="form-label" style="color: #888; font-weight: 600;">Carica Foto o Video (max 5 file)</label>
+            <input type="file" class="form-control" id="garanziaPhotos" multiple 
+                   accept="image/*,video/*"
+                   style="background: #1a1a1a; border: 1px solid #444; color: #fff;"
+                   onchange="previewGaranziaPhotos(this)">
+            <small style="color: #666;">Formato: JPG, PNG, MP4, MOV - Max 5 MB per file</small>
+          </div>
+
+          <div id="garanziaPhotosPreview" class="row g-2 mb-3"></div>
+
+          <!-- FIRMA DIGITALE -->
+          <h6 style="color: var(--gold); margin-top: 25px; margin-bottom: 15px; border-bottom: 1px solid rgba(255,196,0,0.3); padding-bottom: 8px;">
+            <i class="fas fa-signature"></i> Firma Tecnico
+          </h6>
+
+          <div class="mb-3">
+            <div style="border: 2px solid #444; background: white; border-radius: 8px; position: relative;">
+              <canvas id="garanziaSignaturePad" width="600" height="200" 
+                      style="display: block; margin: 0 auto; cursor: crosshair;"></canvas>
+            </div>
+            <button type="button" class="btn btn-sm btn-secondary mt-2" onclick="clearGaranziaSignature()">
+              <i class="fas fa-eraser"></i> Cancella Firma
+            </button>
+          </div>
+
+          <div id="garanziaError" class="alert alert-danger" style="display: none;"></div>
+        </form>
+      </div>
+      
+      <div class="modal-footer" style="border-top: 1px solid rgba(255,196,0,0.2);">
+        <button type="button" class="btn btn-secondary" onclick="hideGaranziaModal()">
+          <i class="fas fa-times"></i> Annulla
+        </button>
+        <button type="button" class="btn btn-yellow" onclick="submitGaranzia()">
+          <i class="fas fa-file-pdf"></i> Genera Rapportino PDF
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <!-- SCRIPT JAVASCRIPT - Continua nella Parte 2 -->
+  <script>
+// ===============================================
+//  VARIABILI GLOBALI
+// ===============================================
+let currentUser = null;
+let currentPage = 0;
+const pageSize = 50;
+let availableMachines = [];
+let filteredMachines = [];
+let allMachines = [];
+let allTickets = [];
+let currentTicketFilter = null;
+
+// ===============================================
+//  FUNZIONI DI AUTENTICAZIONE
+// ===============================================
+
+function login(){
+   const email = document.getElementById('loginEmail').value;
+  const pwd = document.getElementById('loginPwd').value;
+
+  google.script.run
+    .withSuccessHandler(function(res) {
+      if (res.ok) {
+        localStorage.setItem('manitech_token', res.token);
+        localStorage.setItem('manitech_role', res.role);
+        localStorage.setItem('manitech_user', res.email);
+        localStorage.setItem('manitech_name', res.name);
+        initAfterLogin();
+      } else {
+        document.getElementById('loginError').innerText = res.error || 'Login fallito';
+      }
+    })
+    .loginUser(email, pwd);
+}
+
+function logout() {
+  window.isLoggingOut = true;
+  
+  // Pulisci localStorage
+  localStorage.clear();
+  
+  // Resetta l'utente corrente
+  currentUser = null;
+  
+  // Nascondi tutte le sezioni
+  document.querySelectorAll('.content-section').forEach(s => s.style.display = 'none');
+  
+  // Nascondi sidebar
+  const sidebar = document.getElementById('sidebar');
+  if (sidebar) {
+    sidebar.style.display = 'none';
+  }
+  
+  // Mostra SOLO il login
+  const loginContainer = document.getElementById('loginContainer');
+  const mainContent = document.getElementById('mainContent');
+  
+  if (mainContent) {
+    mainContent.style.display = 'block';
+  }
+  
+  if (loginContainer) {
+    loginContainer.style.cssText = 'display: flex !important; align-items: center !important; justify-content: center !important; min-height: 100vh !important;';
+  }
+  
+  // Pulisci i campi di login
+  document.getElementById('loginEmail').value = '';
+  document.getElementById('loginPwd').value = '';
+  document.getElementById('loginError').innerText = '';
+  
+  // Resetta il flag dopo un attimo
+  setTimeout(function() {
+    window.isLoggingOut = false;
+  }, 500);
+  
+  console.log('✅ Logout completato - Torna al login');
+}
+
+
+function updateMenuVisibility(){
+  const role = localStorage.getItem('manitech_role');
+  
+  if(!role) return;
+  
+  const navItems = document.querySelectorAll('.nav-item');
+  
+  navItems.forEach(function(item){
+    const text = item.textContent.trim().toLowerCase();
+    
+    if(role === 'tecnico'){
+      if(text.includes('macchine') || text.includes('noleggi')){
+        item.style.display = 'none';
+      }
+    }
+    
+    if(role !== 'admin'){
+      if(text.includes('utenti') || text.includes('admin')){
+        item.style.display = 'none';
+      }
+    }
+  });
+  
+  const ticketItem = document.querySelector('[onclick="showTickets()"]');
+  if(ticketItem){
+    if(role === 'tecnico' || role === 'admin'){
+      ticketItem.style.display = 'flex';
+    } else {
+      ticketItem.style.display = 'none';
+    }
+  }
+  
+  console.log('✅ Menu aggiornato per ruolo:', role);
+}
+
+function initAfterLogin(){
+  if(window.isLoggingOut) {
+    console.log('⚠️ Logout in corso - skip initAfterLogin');
+    return;
+  }
+  
+  const token = localStorage.getItem('manitech_token');
+  
+  if(!token) {
+    console.log('⚠️ Nessun token - mostro login');
+    
+    const sidebar = document.getElementById('sidebar');
+    if(sidebar) {
+      sidebar.style.display = 'none';
+    }
+    
+    const mainContent = document.getElementById('mainContent');
+    const loginContainer = document.getElementById('loginContainer');
+    
+    if(mainContent) {
+      mainContent.style.cssText = 'display: block !important;';
+    }
+    
+    if(loginContainer) {
+      loginContainer.style.cssText = 'display: flex !important; align-items: center !important; justify-content: center !important; min-height: 100vh !important;';
+    }
+    
+    return;
+  }
+
+  google.script.run
+    .withSuccessHandler(function(info){
+      if(!info.ok){ 
+        console.error('❌ Token non valido');
+        logout(); 
+        return; 
+      }
+
+      document.getElementById('loginContainer')?.style.setProperty('display','none','important');
+
+      currentUser = info;
+      
+      localStorage.setItem('manitech_role', info.role);
+      localStorage.setItem('manitech_user', info.email);
+      localStorage.setItem('manitech_name', info.name);
+
+      const userNameEl = document.getElementById('userName');
+      const userRoleEl = document.getElementById('userRole');
+      
+      if(userNameEl) userNameEl.innerText = info.name;
+      if(userRoleEl) userRoleEl.innerText = info.role;
+
+      const sidebar = document.getElementById('sidebar');
+      if(sidebar) {
+        sidebar.style.display = 'block';
+      }
+
+      updateMenuVisibility();
+      showDashboard();
+      
+      console.log('✅ App inizializzata - Utente:', info.name, '- Ruolo:', info.role);
+    })
+    .withFailureHandler(function(error){
+      console.error('❌ Errore loginStatus:', error);
+      logout();
+    })
+    .loginStatus(token);
+}
+
+// ===============================================
+//  NAVIGAZIONE TRA SEZIONI
+// ===============================================
+
+function setActiveNav(index){
+  const navItems = document.querySelectorAll('.nav-item');
+  navItems.forEach((item, i) => {
+    if(i === index) item.classList.add('active');
+    else item.classList.remove('active');
+  });
+}
+
+function showDashboard(){
+  if(window.isLoggingOut || !localStorage.getItem('manitech_token')) return;
+  
+  document.querySelectorAll('.content-section').forEach(s => s.style.display = 'none');
+  document.getElementById('loginContainer').style.display = 'none';
+  const section = document.getElementById('dashboardSection');
+  if(!section) return;
+  
+  section.style.display = 'block';
+  setActiveNav(0);
+  
+  const role = localStorage.getItem('manitech_role');
+  const name = localStorage.getItem('manitech_name');
+  const token = localStorage.getItem('manitech_token');
+
+  // ⭐ VISTA CLIENTE: Dashboard semplificata con statistiche
+  if(role === 'cliente'){
+    section.innerHTML = `
+      <div class="card-futuristic">
+        <h1 class="card-title">👋 Benvenuto, ${name}</h1>
+        <p style="color:#888;font-size:1rem;margin-bottom:30px">Area Cliente</p>
+        
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <div class="card-futuristic" style="background:linear-gradient(145deg, #1a1a1a, #0f0f0f);padding:25px;text-align:center">
+              <i class="fas fa-cog" style="font-size:3rem;color:var(--gold);margin-bottom:15px"></i>
+              <h3 id="clientMachinesCount" style="color:#fff;font-size:2.5rem;margin-bottom:10px">-</h3>
+              <p style="color:#888;font-weight:600">Le Mie Macchine</p>
+            </div>
+          </div>
+          
+          <div class="col-md-4 mb-3">
+            <div class="card-futuristic" style="background:linear-gradient(145deg, #1a1a1a, #0f0f0f);padding:25px;text-align:center">
+              <i class="fas fa-truck" style="font-size:3rem;color:#4facfe;margin-bottom:15px"></i>
+              <h3 id="clientRentalsCount" style="color:#fff;font-size:2.5rem;margin-bottom:10px">-</h3>
+              <p style="color:#888;font-weight:600">Noleggi Attivi</p>
+            </div>
+          </div>
+          
+          <div class="col-md-4 mb-3">
+            <div class="card-futuristic" style="background:linear-gradient(145deg, #1a1a1a, #0f0f0f);padding:25px;text-align:center">
+              <i class="fas fa-ticket-alt" style="font-size:3rem;color:#ff6b6b;margin-bottom:15px"></i>
+              <h3 id="clientTicketsCount" style="color:#fff;font-size:2.5rem;margin-bottom:10px">-</h3>
+              <p style="color:#888;font-weight:600">Ticket Aperti</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row mt-4">
+          <div class="col-12">
+            <div class="card-futuristic" style="padding:25px">
+              <h5 style="color:var(--gold);margin-bottom:20px"><i class="fas fa-bolt"></i> AZIONI RAPIDE</h5>
+              <div class="d-grid gap-2">
+                <button class="btn-gold" onclick="showMachines()">
+                  <i class="fas fa-cog"></i> Visualizza Le Mie Macchine
+                </button>
+                <button class="btn btn-outline-warning" onclick="showRentals()">
+                  <i class="fas fa-truck"></i> Richiedi Noleggio
+                </button>
+                <button class="btn btn-outline-info" onclick="showTickets()">
+                  <i class="fas fa-wrench"></i> I Miei Ticket
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    loadClientStats();
+    return;
+  }
+
+  // ⭐ VISTA ADMIN/TECNICO: Dashboard originale (UGUALE A PRIMA)
+  const userName = name || 'Utente';
+
+  section.innerHTML = `
+    <div class="card-futuristic">
+      <h1 class="card-title"><i class="fas fa-home"></i> WELCOME, ${userName.toUpperCase()}</h1>
+      <p style="color:#888;margin-bottom:35px;font-size:1.1rem;font-weight:600;letter-spacing:1px">Sistema di gestione Manitech S.r.l.</p>
+
+      <div class="row">
+        <div class="col-md-4 mb-4">
+          <div class="card-futuristic" style="cursor:pointer;text-align:center;padding:35px 25px" onclick="showMachines()">
+            <i class="fas fa-cogs" style="font-size:3.5rem;color:var(--gold);margin-bottom:20px;filter:drop-shadow(0 0 20px rgba(255,196,0,0.6))"></i>
+            <h5 style="color:#fff;font-weight:900;margin-bottom:10px;font-family:'Orbitron',sans-serif;letter-spacing:2px">MACCHINE</h5>
+            <p style="color:#666;font-size:0.85rem;font-weight:600;letter-spacing:1px">Gestione parco mezzi</p>
+          </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+          <div class="card-futuristic" style="cursor:pointer;text-align:center;padding:35px 25px" onclick="showRentals()">
+            <i class="fas fa-calendar-alt" style="font-size:3.5rem;color:var(--gold);margin-bottom:20px;filter:drop-shadow(0 0 20px rgba(255,196,0,0.6))"></i>
+            <h5 style="color:#fff;font-weight:900;margin-bottom:10px;font-family:'Orbitron',sans-serif;letter-spacing:2px">NOLEGGI</h5>
+            <p style="color:#666;font-size:0.85rem;font-weight:600;letter-spacing:1px">Richieste e gestione</p>
+          </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+          <div class="card-futuristic" style="cursor:pointer;text-align:center;padding:35px 25px" onclick="showTickets()">
+            <i class="fas fa-ticket-alt" style="font-size:3.5rem;color:var(--gold);margin-bottom:20px;filter:drop-shadow(0 0 20px rgba(255,196,0,0.6))"></i>
+            <h5 style="color:#fff;font-weight:900;margin-bottom:10px;font-family:'Orbitron',sans-serif;letter-spacing:2px">TICKET</h5>
+            <p style="color:#666;font-size:0.85rem;font-weight:600;letter-spacing:1px">Assistenza e supporto</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+
+/**
+ * Carica statistiche per il cliente
+ */
+function loadClientStats(){
+  const token = localStorage.getItem('manitech_token');
+  
+  google.script.run
+    .withSuccessHandler(function(stats){
+      document.getElementById('clientMachinesCount').textContent = stats.machines || 0;
+      document.getElementById('clientRentalsCount').textContent = stats.activeRentals || 0;
+      document.getElementById('clientTicketsCount').textContent = stats.openTickets || 0;
+    })
+    .withFailureHandler(function(error){
+      console.error('❌ Errore caricamento statistiche:', error);
+      document.getElementById('clientMachinesCount').textContent = '?';
+      document.getElementById('clientRentalsCount').textContent = '?';
+      document.getElementById('clientTicketsCount').textContent = '?';
+    })
+    .getClientStats(token);
+}
+
+
+
+// ===============================================
+//  GESTIONE MACCHINE
+// ===============================================
+
+// ===============================================
+//  GESTIONE MACCHINE CON RICERCA OTTIMIZZATA
+// ===============================================
+
+let searchTimeout = null;
+let currentSearchTerm = '';
+
+function showMachines(){
+  if(window.isLoggingOut || !localStorage.getItem('manitech_token')) return;
+  
+  document.querySelectorAll('.content-section').forEach(s => s.style.display = 'none');
+  document.getElementById('loginContainer').style.display = 'none';
+  const section = document.getElementById('machinesSection');
+  if(!section) return;
+  
+  section.style.display = 'block';
+  setActiveNav(1);
+
+  const role = localStorage.getItem('manitech_role');
+  const token = localStorage.getItem('manitech_token');
+
+  // ⭐ VISTA CLIENTE
+  if(role === 'cliente'){
+    section.innerHTML = `
+      <div class="card-futuristic">
+        <h1 class="card-title"><i class="fas fa-cogs"></i> LE MIE MACCHINE</h1>
+        <p style="color:#888;margin-bottom:25px">Macchine di tua proprietà</p>
+        <div class="row g-3" id="machinesList">
+          <div class="col-12 text-center" style="padding:40px">
+            <i class="fas fa-spinner fa-spin fa-3x text-warning"></i>
+            <p class="mt-3" style="color:#888">Caricamento macchine...</p>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    const listDiv = document.getElementById('machinesList');
+    google.script.run
+      .withSuccessHandler(function(machines){
+        if(!machines || machines.length === 0){
+          listDiv.innerHTML = '<div class="col-12"><div class="alert alert-info">Nessuna macchina trovata</div></div>';
+          return;
+        }
+        
+        let html = '';
+        machines.forEach(function(m){
+          html += `
+            <div class="col-md-6 col-lg-4">
+              <div class="card h-100" style="background: linear-gradient(145deg, #0f0f0f 0%, #0a0a0a 100%); border: 1px solid rgba(255,196,0,0.2);">
+                <div class="card-body">
+                  <h5 style="color:var(--gold)"><i class="fas fa-cog"></i> ${m.model || 'N/A'}</h5>
+                  <p style="color:#888;margin:10px 0"><strong>ID:</strong> ${m.id || 'N/A'}</p>
+                  <p style="color:#888;margin:10px 0"><strong>Serial:</strong> ${m.serial || 'N/A'}</p>
+                  <p style="color:#888"><strong>Stato:</strong> ${m.status === 'available' ? '🟢 Disponibile' : '🔴 In uso'}</p>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+        listDiv.innerHTML = html;
+      })
+      .withFailureHandler(function(err){
+        listDiv.innerHTML = '<div class="col-12"><div class="alert alert-danger">Errore: ' + err + '</div></div>';
+      })
+      .getClientMachines(token);
+    
+    return;
+  }
+
+  // ⭐ VISTA ADMIN/TECNICO
+  section.innerHTML = `
+    <div class="card-futuristic">
+      <h1 class="card-title"><i class="fas fa-cogs"></i> GESTIONE MACCHINE</h1>
+      <p style="color:#888;margin-bottom:25px">Gestione parco macchine Manitech S.r.l.</p>
+      
+      <div class="row mb-3">
+        <div class="col-md-8">
+          <input type="text" id="searchMachines" class="form-control" 
+                 placeholder="🔍 Cerca per ID, seriale o modello..." 
+                 style="background:#0a0a0a;border:1px solid #333;color:#fff"
+                 oninput="searchMachinesAdmin(this.value)">
+        </div>
+        <div class="col-md-4 text-end">
+          <span id="machinesCount" style="color:var(--gold);font-weight:700;font-size:1.1rem">Caricamento...</span>
+        </div>
+      </div>
+      
+      <div class="row g-3" id="machinesList">
+        <div class="col-12 text-center" style="padding:40px">
+          <i class="fas fa-spinner fa-spin fa-3x text-warning"></i>
+          <p class="mt-3" style="color:#888">Caricamento macchine...</p>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  const listDiv = document.getElementById('machinesList');
+  const countSpan = document.getElementById('machinesCount');
+  
+  google.script.run
+    .withSuccessHandler(function(result){
+      let machines = result.machines || result || [];
+      
+      if(countSpan){
+        countSpan.textContent = machines.length + ' Macchine';
+      }
+      
+      if(!machines || machines.length === 0){
+        listDiv.innerHTML = '<div class="col-12"><div class="alert alert-info">Nessuna macchina trovata</div></div>';
+        return;
+      }
+      
+      let html = '';
+      machines.forEach(function(m){
+        const owner = m.ownerType === 'manitech' ? 'Manitech' : (m.cliente || 'Cliente');
+        const statusBadge = m.status === 'available' ? '<span class="badge bg-success">Disponibile</span>' : '<span class="badge bg-warning text-dark">In uso</span>';
+        
+        html += `
+          <div class="col-md-6 col-lg-4">
+            <div class="card h-100" style="background: linear-gradient(145deg, #0f0f0f 0%, #0a0a0a 100%); border: 1px solid rgba(255,196,0,0.2);">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                  <h5 class="card-title mb-0" style="color:var(--gold)"><i class="fas fa-cog"></i> ${m.model || 'N/A'}</h5>
+                  ${statusBadge}
+                </div>
+                <p style="color:#fff;margin:5px 0"><strong style="color:#888">ID:</strong> ${m.id || 'N/A'}</p>
+                <p style="color:#fff;margin:5px 0"><strong style="color:#888">Serial:</strong> ${m.serial || 'N/A'}</p>
+                <p style="color:#fff;margin:5px 0"><strong style="color:#888">Proprietario:</strong> ${owner}</p>
+                <p style="color:#888;margin:10px 0"><strong style="color:#888">Noleggiabile:</strong> ${m.noleggiabile === 'Sì' ? '✅ Sì' : '❌ No'}</p>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      listDiv.innerHTML = html;
+    })
+    .withFailureHandler(function(err){
+      listDiv.innerHTML = '<div class="col-12"><div class="alert alert-danger">Errore: ' + err + '</div></div>';
+      if(countSpan){
+        countSpan.textContent = 'Errore';
+      }
+    })
+    .listMachinesPaged(token, 0, 50, '');
+}
+
+// Funzione di ricerca per admin
+function searchMachinesAdmin(searchTerm){
+  const token = localStorage.getItem('manitech_token');
+  const listDiv = document.getElementById('machinesList');
+  
+  if(!searchTerm || searchTerm.trim() === ''){
+    // Se la ricerca è vuota, ricarica tutte
+    showMachines();
+    return;
+  }
+  
+  google.script.run
+    .withSuccessHandler(function(result){
+      let machines = result.machines || result || [];
+      
+      // Filtra in base al termine di ricerca
+      let filtered = machines.filter(function(m){
+        const search = searchTerm.toLowerCase();
+        return (m.id && m.id.toLowerCase().includes(search)) ||
+               (m.serial && m.serial.toLowerCase().includes(search)) ||
+               (m.model && m.model.toLowerCase().includes(search));
+      });
+      
+      if(filtered.length === 0){
+        listDiv.innerHTML = '<div class="col-12"><div class="alert alert-info">Nessun risultato trovato</div></div>';
+        return;
+      }
+      
+      let html = '';
+      filtered.forEach(function(m){
+        const owner = m.ownerType === 'manitech' ? 'Manitech' : (m.cliente || 'Cliente');
+        const statusBadge = m.status === 'available' ? '<span class="badge bg-success">Disponibile</span>' : '<span class="badge bg-warning text-dark">In uso</span>';
+        
+        html += `
+          <div class="col-md-6 col-lg-4">
+            <div class="card h-100" style="background: linear-gradient(145deg, #0f0f0f 0%, #0a0a0a 100%); border: 1px solid rgba(255,196,0,0.2);">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                  <h5 class="card-title mb-0" style="color:var(--gold)"><i class="fas fa-cog"></i> ${m.model || 'N/A'}</h5>
+                  ${statusBadge}
+                </div>
+                <p style="color:#fff;margin:5px 0"><strong style="color:#888">ID:</strong> ${m.id || 'N/A'}</p>
+                <p style="color:#fff;margin:5px 0"><strong style="color:#888">Serial:</strong> ${m.serial || 'N/A'}</p>
+                <p style="color:#fff;margin:5px 0"><strong style="color:#888">Proprietario:</strong> ${owner}</p>
+                <p style="color:#888;margin:10px 0"><strong style="color:#888">Noleggiabile:</strong> ${m.noleggiabile === 'Sì' ? '✅ Sì' : '❌ No'}</p>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      listDiv.innerHTML = html;
+    })
+    .withFailureHandler(function(err){
+      listDiv.innerHTML = '<div class="col-12"><div class="alert alert-danger">Errore ricerca: ' + err + '</div></div>';
+    })
+    .listMachinesPaged(token, 0, 50, '');
+}
+
+
+
+
+function searchMachinesDebounced(searchTerm) {
+  // Debounce: aspetta 500ms dopo che l'utente smette di scrivere
+  clearTimeout(searchTimeout);
+  currentSearchTerm = searchTerm;
+  
+  searchTimeout = setTimeout(() => {
+    loadMachines(0, searchTerm);
+  }, 500);
+}
+
+/**
+ * Carica macchine del cliente loggato
+ */
+function loadClientMachines(){
+  const token = localStorage.getItem('manitech_token');
+  const listDiv = document.getElementById('machinesList');
+  const countSpan = document.getElementById('clientMachinesCount');
+  
+  google.script.run
+    .withSuccessHandler(function(machines){
+      if(machines && machines.length > 0){
+        // Aggiorna contatore
+        if(countSpan){
+          countSpan.textContent = machines.length + ' ' + (machines.length === 1 ? 'Macchina' : 'Macchine');
+        }
+        
+        // Renderizza le macchine
+        renderClientMachines(machines);
+      } else {
+        listDiv.innerHTML = `
+          <div class="col-12">
+            <div class="alert alert-info text-center">
+              <i class="fas fa-info-circle fa-3x mb-3" style="opacity:0.5"></i>
+              <h5>Nessuna Macchina Trovata</h5>
+              <p class="mb-0">Non hai ancora macchine registrate nel sistema.</p>
+            </div>
+          </div>
+        `;
+        
+        if(countSpan){
+          countSpan.textContent = '0 Macchine';
+        }
+      }
+    })
+    .withFailureHandler(function(error){
+      listDiv.innerHTML = `
+        <div class="col-12">
+          <div class="alert alert-danger">
+            <i class="fas fa-exclamation-triangle"></i> 
+            <strong>Errore:</strong> ${error.message}
+          </div>
+        </div>
+      `;
+      
+      if(countSpan){
+        countSpan.textContent = 'Errore';
+      }
+    })
+    .getClientMachines(token);
+}
+
+
+/**
+ * Renderizza le macchine del cliente (stile card)
+ */
+function renderClientMachines(machines){
+  const container = document.getElementById('machinesList');
+  let html = '';
+  
+  machines.forEach(function(machine){
+    // Badge stato
+    let statusBadge = '';
+    let statusColor = '';
+    
+    switch(machine.status){
+      case 'available':
+        statusBadge = '<span class="badge bg-success">Disponibile</span>';
+        statusColor = '#28a745';
+        break;
+      case 'rented':
+        statusBadge = '<span class="badge bg-warning text-dark">Noleggiata</span>';
+        statusColor = '#ffc107';
+        break;
+      case 'maintenance':
+        statusBadge = '<span class="badge bg-danger">In Manutenzione</span>';
+        statusColor = '#dc3545';
+        break;
+      default:
+        statusBadge = '<span class="badge bg-secondary">Sconosciuto</span>';
+        statusColor = '#6c757d';
+    }
+    
+    html += `
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100" style="background: linear-gradient(145deg, #0f0f0f 0%, #0a0a0a 100%); 
+             border: 1px solid rgba(255,196,0,0.2); transition: transform 0.2s, box-shadow 0.2s;">
+          <div class="card-body">
+            <!-- Header con modello e stato -->
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <h5 class="card-title mb-0" style="color: var(--gold); font-size:1.1rem">
+                <i class="fas fa-cog"></i> ${escapeHtml(machine.model)}
+              </h5>
+              ${statusBadge}
+            </div>
+            
+            <!-- Dettagli macchina -->
+            <div class="mb-2">
+              <small style="color: #888; text-transform: uppercase; font-size:0.7rem">ID Macchina</small><br>
+              <span style="color: #fff; font-weight:600; font-size:0.95rem">${escapeHtml(machine.id)}</span>
+            </div>
+            
+            <div class="mb-2">
+              <small style="color: #888; text-transform: uppercase; font-size:0.7rem">Numero Seriale</small><br>
+              <span style="color: #fff; font-size:0.9rem">${escapeHtml(machine.serial)}</span>
+            </div>
+            
+            <div class="mb-3">
+              <small style="color: #888; text-transform: uppercase; font-size:0.7rem">Categoria</small><br>
+              <span style="color: ${statusColor}; font-size:0.9rem">${escapeHtml(machine.categoria || 'N/A')}</span>
+            </div>
+            
+            <!-- Indicatore visivo stato -->
+            <div style="height:3px; background:${statusColor}; border-radius:10px; margin-top:15px"></div>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+  
+  container.innerHTML = html;
+}
+
+
+/**
+ * Helper: Escape HTML per prevenire XSS
+ */
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function renderMachines(machines){
+  const container = document.getElementById('machinesList');
+  
+  if (!machines || machines.length === 0) {
+    container.innerHTML = '<div class="col-12"><div class="alert alert-info">Nessuna macchina trovata</div></div>';
+    return;
+  }
+  
+  let html = '';
+  
+  machines.forEach(function(machine){
+    const statusBadge = machine.status === 'available' 
+      ? '<span class="badge bg-success">Disponibile</span>' 
+      : '<span class="badge bg-warning text-dark">In uso</span>';
+    
+    const showButtons = currentUser && (currentUser.role === 'tecnico' || currentUser.role === 'admin');
+    
+    html += `
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100" style="background: linear-gradient(145deg, #0f0f0f 0%, #0a0a0a 100%); 
+             border: 1px solid rgba(255,196,0,0.2);">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <h5 class="card-title mb-0" style="color: var(--gold);">
+                <i class="fas fa-cog"></i> ${machine.model || 'N/A'}
+              </h5>
+              ${statusBadge}
+            </div>
+            
+            <div class="mb-2">
+              <strong style="color: #888;">ID:</strong><br>
+              <span style="color: #fff;">${machine.id || 'N/A'}</span>
+            </div>
+            
+            <div class="mb-2">
+              <strong style="color: #888;">Serial:</strong><br>
+              <span style="color: #fff;">${machine.serial || 'N/A'}</span>
+            </div>
+            
+            <div class="mb-2">
+  <strong style="color: #888;">Proprietario:</strong><br>
+  <span style="color: #fff;">${machine.ownerType === 'manitech' ? 'Manitech' : machine.cliente}</span>
+</div>
+            
+            <div class="mb-3">
+              <strong style="color: #888;">Noleggiabile:</strong>
+              <span style="color: ${machine.noleggiabile === 'Sì' ? '#4facfe' : '#666'};">
+                ${machine.noleggiabile}
+              </span>
+            </div>
+            
+            <div class="d-grid gap-2">
+              <button class="btn btn-sm btn-outline-warning" onclick="showMachineDetail('${machine.id}')">
+                <i class="fas fa-info-circle"></i> Dettagli
+              </button>
+              
+              ${showButtons ? `
+                <button class="btn btn-sm btn-yellow" onclick="openTicketModal('${machine.id}')">
+                  <i class="fas fa-wrench"></i> Apri Ticket
+                </button>
+                
+                <button class="btn btn-sm btn-success" onclick="openVerificaModal('${machine.id}')">
+                  <i class="fas fa-clipboard-check"></i> Verifica Sicurezza
+                </button>
+                
+                <button class="btn btn-sm btn-info" onclick="openGaranziaModal('${machine.id}')">
+                  <i class="fas fa-shield-alt"></i> Garanzia
+                </button>
+              ` : ''}
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+  
+  container.innerHTML = html;
+}
+
+function showMachineDetail(machineId){
+  alert('Dettagli macchina: ' + machineId + '\n\n(Da implementare con modal completo)');
+}
+
+
+// ===============================================
+//  GESTIONE TICKETS
+// ===============================================
+
+function showTickets() {
+  if(window.isLoggingOut || !localStorage.getItem('manitech_token')) return;
+  
+  console.log('🎫 Apertura sezione Tickets');
+  
+  document.querySelectorAll('.content-section').forEach(s => s.style.display = 'none');
+  document.getElementById('loginContainer').style.display = 'none';
+  const section = document.getElementById('ticketsSection');
+  if(!section) return;
+  
+  section.style.display = 'block';
+  setActiveNav(3);
+  
+  const role = localStorage.getItem('manitech_role');
+  
+  // ⭐ VISTA CLIENTE: Solo i suoi ticket
+  if(role === 'cliente'){
+    section.innerHTML = `
+      <div class="card-futuristic">
+        <h1 class="card-title"><i class="fas fa-ticket-alt"></i> I MIEI TICKET</h1>
+        <p style="color:#888;margin-bottom:25px">Ticket di assistenza sulle tue macchine</p>
+        
+        <!-- Filtro stato -->
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <select id="filterClientTicketStatus" class="form-control" onchange="filterClientTickets()">
+              <option value="">Tutti gli stati</option>
+              <option value="aperto">Aperti</option>
+              <option value="in_lavorazione">In Lavorazione</option>
+              <option value="chiuso">Chiusi</option>
+            </select>
+          </div>
+          <div class="col-md-6 text-end">
+            <span id="clientTicketsCount" style="color:var(--gold);font-weight:700"></span>
+          </div>
+        </div>
+        
+        <div id="ticketsList" class="row g-4">
+          <div class="col-12 text-center" style="padding:40px">
+            <i class="fas fa-spinner fa-spin fa-3x text-warning"></i>
+            <p class="mt-3" style="color:#888">Caricamento ticket...</p>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    loadClientTickets();
+    
+  } else {
+    // ⭐ VISTA ADMIN/TECNICO: Tutti i ticket (layout originale)
+    section.innerHTML = `
+      <div class="card-futuristic">
+        <h1 class="card-title"><i class="fas fa-ticket-alt"></i> SISTEMA TICKETS ASSISTENZA</h1>
+        <p style="color:#888;margin-bottom:25px">Gestione ticket di assistenza</p>
+        <div id="ticketsList" class="row g-4"></div>
+      </div>
+    `;
+    
+    loadTickets();
+  }
+}
+
+function loadTickets() {
+  const token = localStorage.getItem('manitech_token');
+  const role = localStorage.getItem('manitech_role');
+  
+  google.script.run
+    .withSuccessHandler(function(tickets) {
+      allTickets = tickets || [];
+      renderTickets(tickets, role);
+    })
+    .withFailureHandler(function(err) {
+      console.error('❌ Errore caricamento ticket:', err);
+      const listEl = document.getElementById('ticketsList');
+      if (listEl) {
+        listEl.innerHTML = '<div class="col-12"><div class="alert alert-danger">Errore nel caricamento dei ticket.</div></div>';
+      }
+    })
+    .listTickets(token);
+}
+
+function renderTickets(tickets, role) {
+  const container = document.getElementById('ticketsList');
+  if (!container) return;
+
+  if (!tickets || tickets.length === 0) {
+    container.innerHTML = '<div class="col-12"><div class="alert alert-info">📋 Nessun ticket trovato.</div></div>';
+    return;
+  }
+
+  let html = '';
+  tickets.forEach(ticket => {
+    const badgeClass = ticket.status || 'aperto';
+    const statusText = ticket.status === 'in_lavorazione' ? 'In Lavorazione' : 
+                      ticket.status === 'chiuso' ? 'Chiuso' : 'Aperto';
+
+    html += `
+      <div class="col-md-6 col-lg-4">
+        <div class="ticket-card">
+          <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+            <div>
+              <h5 style="color: var(--gold); margin: 0;">
+                <i class="fas fa-ticket-alt"></i> Ticket #${ticket.id.substring(0, 8)}
+              </h5>
+              <small style="color: #888;">Creato il: ${formatDate(ticket.createdAt)}</small>
+            </div>
+            <span class="ticket-badge ${badgeClass}">${statusText}</span>
+          </div>
+          
+          <div style="margin-bottom: 10px;">
+            <strong style="color: #fff;">Macchina:</strong> 
+            <span style="color: #ccc;">${ticket.machineModel} (${ticket.machineSerial})</span>
+          </div>
+          
+          <div style="margin-bottom: 10px;">
+            <strong style="color: #fff;">Cliente:</strong> 
+            <span style="color: #ccc;">${ticket.clientName}</span>
+          </div>
+          
+          <div style="margin-bottom: 15px;">
+            <strong style="color: #fff;">Difetto:</strong><br>
+            <span style="color: #ccc;">${ticket.description.substring(0, 150)}${ticket.description.length > 150 ? '...' : ''}</span>
+          </div>
+          
+          ${role === 'admin' || role === 'tecnico' ? `
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+              <button class="btn btn-sm btn-warning" onclick="changeTicketStatus('${ticket.id}', 'in_lavorazione')">
+                <i class="fas fa-play"></i> Inizia
+              </button>
+              <button class="btn btn-sm btn-success" onclick="changeTicketStatus('${ticket.id}', 'chiuso')">
+                <i class="fas fa-check"></i> Chiudi
+              </button>
+            </div>
+          ` : ''}
+        </div>
+      </div>
+    `;
+  });
+
+  container.innerHTML = html;
+}
+
+
+// ⭐ FUNZIONI CLIENTE PER TICKET
+
+let allClientTickets = [];
+
+function loadClientTickets(){
+  const token = localStorage.getItem('manitech_token');
+  const container = document.getElementById('ticketsList');
+  const countSpan = document.getElementById('clientTicketsCount');
+  
+  google.script.run
+    .withSuccessHandler(function(tickets){
+      allClientTickets = tickets || [];
+      
+      if(countSpan){
+        countSpan.textContent = tickets.length + ' ' + (tickets.length === 1 ? 'Ticket' : 'Ticket');
+      }
+      
+      renderClientTickets(tickets);
+    })
+    .withFailureHandler(function(error){
+      container.innerHTML = '<div class="col-12"><div class="alert alert-danger">Errore: ' + error.message + '</div></div>';
+      
+      if(countSpan){
+        countSpan.textContent = 'Errore';
+      }
+    })
+    .getClientTickets(token);
+}
+
+function renderClientTickets(tickets){
+  const container = document.getElementById('ticketsList');
+  
+  if(!tickets || tickets.length === 0){
+    container.innerHTML = `
+      <div class="col-12">
+        <div class="alert alert-info text-center">
+          <i class="fas fa-inbox fa-3x mb-3" style="opacity:0.5"></i>
+          <h5>Nessun Ticket</h5>
+          <p class="mb-0">Non hai ticket di assistenza aperti al momento.</p>
+        </div>
+      </div>
+    `;
+    return;
+  }
+  
+  let html = '';
+  tickets.forEach(function(ticket){
+    const badgeClass = ticket.status || 'aperto';
+    let statusText = 'Aperto';
+    let statusColor = '#ffc107';
+    
+    switch(ticket.status){
+      case 'in_lavorazione':
+        statusText = 'In Lavorazione';
+        statusColor = '#17a2b8';
+        break;
+      case 'chiuso':
+        statusText = 'Chiuso';
+        statusColor = '#28a745';
+        break;
+    }
+    
+    html += `
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100" style="background:#0f0f0f;border:1px solid rgba(255,196,0,0.2)">
+          <div class="card-body">
+            <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:15px">
+              <div>
+                <h5 style="color:var(--gold);margin:0;font-size:1rem">
+                  <i class="fas fa-ticket-alt"></i> Ticket #${ticket.id.substring(0, 8)}
+                </h5>
+                <small style="color:#888">${formatDate(ticket.createdAt)}</small>
+              </div>
+              <span class="badge" style="background:${statusColor}">${statusText}</span>
+            </div>
+            
+            <div style="margin-bottom:10px">
+              <strong style="color:#fff;font-size:0.85rem">Macchina:</strong><br>
+              <span style="color:#ccc;font-size:0.9rem">${ticket.machineModel}</span>
+            </div>
+            
+            <div style="margin-bottom:10px">
+              <strong style="color:#fff;font-size:0.85rem">Serial:</strong>
+              <span style="color:#888;font-size:0.85rem">${ticket.machineSerial}</span>
+            </div>
+            
+            <div style="margin-bottom:15px">
+              <strong style="color:#fff;font-size:0.85rem">Difetto:</strong><br>
+              <span style="color:#ccc;font-size:0.85rem">${ticket.description.substring(0, 100)}${ticket.description.length > 100 ? '...' : ''}</span>
+            </div>
+            
+            <div style="height:2px;background:${statusColor};border-radius:10px"></div>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+  
+  container.innerHTML = html;
+}
+
+function filterClientTickets(){
+  const filterStatus = document.getElementById('filterClientTicketStatus').value;
+  
+  if(!filterStatus){
+    renderClientTickets(allClientTickets);
+    return;
+  }
+  
+  const filtered = allClientTickets.filter(function(t){
+    return t.status === filterStatus;
+  });
+  
+  renderClientTickets(filtered);
+}
+
+
+// ⭐ FUNZIONI COMUNI (rimangono invariate)
+
+function openTicketModal(machineId) {
+  const modalElement = document.getElementById('newTicketModal');
+  if (!modalElement) {
+    console.error('❌ Errore critico: Modale non trovato!');
+    return;
+  }
+
+  modalElement.classList.add('is-visible');
+
+  const token = localStorage.getItem('manitech_token');
+  const userName = localStorage.getItem('manitech_name') || localStorage.getItem('manitech_user');
+  
+  document.getElementById('ticketCreatedBy').value = userName;
+
+  google.script.run
+    .withSuccessHandler(function(machine) {
+      if (!machine) {
+        alert('Errore: Macchina non trovata.');
+        hideNewTicketModal();
+        return;
+      }
+      document.getElementById('ticketMachineInfo').value = `${machine.model} (Seriale: ${machine.serial})`;
+      document.getElementById('ticketMachineId').value = machine.id;
+      document.getElementById('ticketClientInfo').value = machine.cliente || 'Non specificato';
+      document.getElementById('ticketDescription').value = '';
+      document.getElementById('ticketError').style.display = 'none';
+    })
+    .withFailureHandler(function(err) {
+      console.error('❌ Errore caricamento macchina:', err);
+      alert('Errore nel caricamento dei dati della macchina.');
+      hideNewTicketModal();
+    })
+    .getMachineById(token, machineId);
+}
+
+function hideNewTicketModal() {
+  const modalElement = document.getElementById('newTicketModal');
+  if (modalElement) {
+    modalElement.classList.remove('is-visible');
+  }
+}
+
+function submitTicket() {
+  const token = localStorage.getItem('manitech_token');
+  const machineId = document.getElementById('ticketMachineId').value;
+  const description = document.getElementById('ticketDescription').value;
+  const errorEl = document.getElementById('ticketError');
+
+  if (!description || description.trim().length < 10) {
+    errorEl.textContent = 'La descrizione del difetto è obbligatoria (minimo 10 caratteri).';
+    errorEl.style.display = 'block';
+    return;
+  }
+  
+  if (!machineId) {
+    errorEl.textContent = 'Errore: Macchina non selezionata.';
+    errorEl.style.display = 'block';
+    return;
+  }
+  
+  errorEl.style.display = 'none';
+
+  google.script.run
+    .withSuccessHandler(function(response) {
+      if (response.ok) {
+        alert(`✅ Ticket ${response.ticketId} creato con successo!`);
+        hideNewTicketModal();
+        
+        const role = localStorage.getItem('manitech_role');
+        if(role === 'cliente'){
+          loadClientTickets();
+        } else {
+          loadTickets();
+        }
+      } else {
+        errorEl.textContent = `Errore: ${response.error}`;
+        errorEl.style.display = 'block';
+      }
+    })
+    .withFailureHandler(function(err) {
+      errorEl.textContent = `Errore di sistema: ${err.message}`;
+      errorEl.style.display = 'block';
+    })
+    .createTicket(token, machineId, description);
+}
+
+function changeTicketStatus(ticketId, newStatus) {
+  const token = localStorage.getItem('manitech_token');
+  
+  google.script.run
+    .withSuccessHandler(function(response) {
+      if (response.ok) {
+        alert('✅ Stato ticket aggiornato con successo!');
+        loadTickets();
+      } else {
+        alert('❌ Errore: ' + response.error);
+      }
+    })
+    .withFailureHandler(function(err) {
+      alert('❌ Errore di sistema: ' + err.message);
+    })
+    .updateTicketStatus(token, ticketId, newStatus, '');
+}
+
+function formatDate(date) {
+  if (!date) return 'N/D';
+  try {
+    const d = new Date(date);
+    return d.toLocaleDateString('it-IT') + ' ' + d.toLocaleTimeString('it-IT', {hour: '2-digit', minute:'2-digit'});
+  } catch (e) {
+    return String(date);
+  }
+}
+
+
+// ===============================================
+//  GESTIONE NOLEGGI (COMPLETA)
+// ===============================================
+
+function showRentals(){
+  if(window.isLoggingOut || !localStorage.getItem('manitech_token')) return;
+  
+  document.querySelectorAll('.content-section').forEach(s => s.style.display = 'none');
+  document.getElementById('loginContainer').style.display = 'none';
+  const section = document.getElementById('rentalsSection');
+  if(!section) return;
+  
+  section.style.display = 'block';
+  setActiveNav(2);
+
+  const role = localStorage.getItem('manitech_role');
+
+  // ⭐ VISTA CLIENTE: Richiesta noleggio semplificata
+  if(role === 'cliente'){
+    section.innerHTML = `
+      <div class="card-futuristic">
+        <h1 class="card-title"><i class="fas fa-truck"></i> RICHIESTA NOLEGGIO</h1>
+        <p style="color:#888;margin-bottom:25px">Richiedi macchine disponibili per il noleggio</p>
+
+        <!-- Sezione richiesta noleggio -->
+        <div class="card-futuristic mb-4" style="background:linear-gradient(145deg, #0d0d0d 0%, #080808 100%)">
+          <h5 style="color:var(--gold);font-family:Orbitron,sans-serif;font-weight:900;margin-bottom:25px;letter-spacing:2px">
+            <i class="fas fa-plus-circle"></i> NUOVA RICHIESTA
+          </h5>
+
+          <div class="mb-4">
+            <label style="color:#888;font-weight:700;margin-bottom:12px;letter-spacing:1px;text-transform:uppercase;font-size:0.9rem">
+              <i class="fas fa-search"></i> Macchine Disponibili
+            </label>
+            <div class="row">
+              <div class="col-md-10 mb-3">
+                <input type="text" id="searchMachineRental" class="form-control" 
+                       placeholder="🔍 Cerca per modello o categoria..." 
+                       oninput="filterClientRentalMachines()">
+              </div>
+              <div class="col-md-2 mb-3">
+                <button class="btn-gold w-100" onclick="loadClientAvailableMachines()">
+                  <i class="fas fa-sync-alt"></i> Aggiorna
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div id="availableMachinesList" class="mb-4" 
+               style="max-height:350px;overflow-y:auto;border:1px solid rgba(255,196,0,0.2);border-radius:8px;padding:10px">
+            <div class="text-center" style="padding:20px">
+              <i class="fas fa-spinner fa-spin fa-2x text-warning"></i>
+              <p class="mt-2" style="color:#888">Caricamento macchine...</p>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-5 mb-3">
+              <label style="color:#888;font-weight:700;margin-bottom:8px;text-transform:uppercase;font-size:0.85rem">
+                Macchina Selezionata
+              </label>
+              <input id="rentalMachineId" class="form-control" readonly placeholder="Seleziona una macchina sopra">
+            </div>
+            <div class="col-md-3 mb-3">
+              <label style="color:#888;font-weight:700;margin-bottom:8px;text-transform:uppercase;font-size:0.85rem">
+                Data inizio
+              </label>
+              <input id="rentalStart" class="form-control" type="date">
+            </div>
+            <div class="col-md-3 mb-3">
+              <label style="color:#888;font-weight:700;margin-bottom:8px;text-transform:uppercase;font-size:0.85rem">
+                Data fine
+              </label>
+              <input id="rentalEnd" class="form-control" type="date">
+            </div>
+            <div class="col-md-1 mb-3">
+              <label style="color:transparent;font-size:0.85rem">.</label>
+              <button class="btn-gold w-100" onclick="submitClientRental()">
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label style="color:#888;font-weight:700;margin-bottom:8px;text-transform:uppercase;font-size:0.85rem">
+              Note (opzionale)
+            </label>
+            <textarea id="rentalNotes" class="form-control" rows="2" 
+                      placeholder="Eventuali note per la richiesta..."></textarea>
+          </div>
+          
+          <div id="rentalRequestStatus" class="mt-3"></div>
+        </div>
+
+        <!-- Le mie richieste -->
+        <div class="card-futuristic">
+          <h5 style="color:var(--gold);font-family:Orbitron,sans-serif;font-weight:900;margin-bottom:25px;letter-spacing:2px">
+            <i class="fas fa-list"></i> LE MIE RICHIESTE
+          </h5>
+          <div id="rentalsList">
+            <div class="text-center" style="padding:20px">
+              <i class="fas fa-spinner fa-spin fa-2x text-warning"></i>
+              <p class="mt-2" style="color:#888">Caricamento richieste...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    loadClientAvailableMachines();
+    loadClientRentals();
+    
+  } else {
+    // ⭐ VISTA ADMIN/TECNICO: Layout completo originale
+    section.innerHTML = `
+      <div class="card-futuristic">
+        <h1 class="card-title"><i class="fas fa-calendar-alt"></i> GESTIONE NOLEGGI</h1>
+
+        <div class="card-futuristic mb-4" style="background:linear-gradient(145deg, #0d0d0d 0%, #080808 100%)">
+          <h5 style="color:var(--gold);font-family:Orbitron,sans-serif;font-weight:900;margin-bottom:25px;letter-spacing:2px">
+            <i class="fas fa-plus-circle"></i> RICHIEDI NOLEGGIO
+          </h5>
+
+          <div class="mb-4">
+            <label style="color:#888;font-weight:700;margin-bottom:12px;letter-spacing:1px;text-transform:uppercase;font-size:0.9rem">
+              <i class="fas fa-search"></i> Cerca Macchine Disponibili
+            </label>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <input type="text" id="searchMachineRental" class="form-control" 
+                       placeholder="🔍 Cerca per ID, Serial, Modello..." 
+                       oninput="filterMachinesRental()">
+              </div>
+              <div class="col-md-4 mb-3">
+                <select id="filterCategoria" class="form-control" onchange="filterMachinesRental()">
+                  <option value="">Tutte le categorie</option>
+                </select>
+              </div>
+              <div class="col-md-2 mb-3">
+                <button class="btn-gold w-100" onclick="loadAvailableMachines()">
+                  <i class="fas fa-sync-alt"></i> Aggiorna
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div id="availableMachinesList" class="mb-4" 
+               style="max-height:350px;overflow-y:auto;border:1px solid rgba(255,196,0,0.2);border-radius:8px;padding:10px"></div>
+
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label style="color:#888;font-weight:700;margin-bottom:8px;text-transform:uppercase;font-size:0.85rem">
+                Macchina Selezionata
+              </label>
+              <input id="rentalMachineId" class="form-control" readonly placeholder="Seleziona una macchina sopra">
+            </div>
+            <div class="col-md-3 mb-3">
+              <label style="color:#888;font-weight:700;margin-bottom:8px;text-transform:uppercase;font-size:0.85rem">
+                Data inizio
+              </label>
+              <input id="rentalStart" class="form-control" type="date">
+            </div>
+            <div class="col-md-3 mb-3">
+              <label style="color:#888;font-weight:700;margin-bottom:8px;text-transform:uppercase;font-size:0.85rem">
+                Data fine
+              </label>
+              <input id="rentalEnd" class="form-control" type="date">
+            </div>
+            <div class="col-md-2 mb-3">
+              <label style="color:transparent;font-size:0.85rem">.</label>
+              <button class="btn-gold w-100" onclick="submitRentalAdvanced()">
+                <i class="fas fa-paper-plane"></i> Richiedi
+              </button>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label style="color:#888;font-weight:700;margin-bottom:8px;text-transform:uppercase;font-size:0.85rem">
+              Note (opzionale)
+            </label>
+            <textarea id="rentalNotes" class="form-control" rows="2" 
+                      placeholder="Eventuali note per la richiesta..."></textarea>
+          </div>
+          
+          <div id="rentalRequestStatus" class="mt-3"></div>
+        </div>
+
+        <div class="card-futuristic">
+          <h5 style="color:var(--gold);font-family:Orbitron,sans-serif;font-weight:900;margin-bottom:25px;letter-spacing:2px">
+            <i class="fas fa-list"></i> RICHIESTE NOLEGGIO
+          </h5>
+          <div id="rentalsList"></div>
+        </div>
+      </div>
+    `;
+
+    loadAvailableMachines();
+    loadRentals();
+  }
+}
+function loadClientAvailableMachines(){
+  const token = localStorage.getItem('manitech_token');
+  const container = document.getElementById('availableMachinesList');
+  
+  google.script.run
+    .withSuccessHandler(function(machines){
+      allAvailableMachines = machines || [];
+      renderClientAvailableMachines(machines);
+    })
+    .withFailureHandler(function(error){
+      container.innerHTML = '<div class="alert alert-danger">Errore: ' + error.message + '</div>';
+    })
+    .getClientAvailableRentals(token);
+}
+
+function renderClientAvailableMachines(machines){
+  const container = document.getElementById('availableMachinesList');
+  
+  if(!machines || machines.length === 0){
+    container.innerHTML = '<div class="alert alert-info text-center">Nessuna macchina disponibile per il noleggio al momento.</div>';
+    return;
+  }
+  
+  let html = '<div class="row g-2">';
+  machines.forEach(function(m){
+    html += `
+      <div class="col-md-6">
+        <div class="rental-machine-item" onclick="selectRentalMachine('${escapeHtml(m.id)}', '${escapeHtml(m.model)}')">
+          <div style="display:flex;align-items:center;gap:15px">
+            <i class="fas fa-cog" style="font-size:2rem;color:var(--gold)"></i>
+            <div style="flex:1">
+              <strong style="color:#fff;font-size:0.95rem">${escapeHtml(m.model)}</strong><br>
+              <small style="color:#888">ID: ${escapeHtml(m.id)} | Serial: ${escapeHtml(m.serial)}</small>
+            </div>
+            <span class="badge bg-success">Disponibile</span>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+  html += '</div>';
+  
+  container.innerHTML = html;
+}
+
+function filterClientRentalMachines(){
+  const searchTerm = document.getElementById('searchMachineRental').value.toLowerCase();
+  const filtered = allAvailableMachines.filter(function(m){
+    return m.model.toLowerCase().includes(searchTerm) || 
+           (m.categoria && m.categoria.toLowerCase().includes(searchTerm));
+  });
+  renderClientAvailableMachines(filtered);
+}
+
+function submitClientRental(){
+  const token = localStorage.getItem('manitech_token');
+  const machineId = document.getElementById('rentalMachineId').value;
+  const startDate = document.getElementById('rentalStart').value;
+  const endDate = document.getElementById('rentalEnd').value;
+  const notes = document.getElementById('rentalNotes').value;
+  const statusDiv = document.getElementById('rentalRequestStatus');
+  
+  if(!machineId || !startDate || !endDate){
+    statusDiv.innerHTML = '<div class="alert alert-warning">Seleziona una macchina e le date</div>';
+    statusDiv.style.display = 'block';
+    return;
+  }
+  
+  statusDiv.innerHTML = '<div class="alert alert-info"><i class="fas fa-spinner fa-spin"></i> Invio richiesta...</div>';
+  statusDiv.style.display = 'block';
+  
+  google.script.run
+    .withSuccessHandler(function(response){
+      if(response.ok){
+        statusDiv.innerHTML = '<div class="alert alert-success">✅ Richiesta inviata con successo!</div>';
+        document.getElementById('rentalMachineId').value = '';
+        document.getElementById('rentalStart').value = '';
+        document.getElementById('rentalEnd').value = '';
+        document.getElementById('rentalNotes').value = '';
+        setTimeout(function(){
+          statusDiv.style.display = 'none';
+          loadClientRentals();
+        }, 2000);
+      } else {
+        statusDiv.innerHTML = '<div class="alert alert-danger">Errore: ' + response.error + '</div>';
+      }
+    })
+    .withFailureHandler(function(error){
+      statusDiv.innerHTML = '<div class="alert alert-danger">Errore: ' + error.message + '</div>';
+    })
+    .requestRental(token, machineId, startDate, endDate, notes);
+}
+
+function loadClientRentals(){
+  const token = localStorage.getItem('manitech_token');
+  const container = document.getElementById('rentalsList');
+  
+  google.script.run
+    .withSuccessHandler(function(rentals){
+      renderClientRentals(rentals);
+    })
+    .withFailureHandler(function(error){
+      container.innerHTML = '<div class="alert alert-danger">Errore: ' + error.message + '</div>';
+    })
+    .getClientRentals(token);
+}
+
+function renderClientRentals(rentals){
+  const container = document.getElementById('rentalsList');
+  
+  if(!rentals || rentals.length === 0){
+    container.innerHTML = '<div class="alert alert-info text-center">Nessuna richiesta di noleggio effettuata.</div>';
+    return;
+  }
+  
+  let html = '<div class="row g-3">';
+  rentals.forEach(function(r){
+    let statusBadge = '';
+    switch(r.status){
+      case 'requested':
+        statusBadge = '<span class="badge bg-warning text-dark">In Attesa</span>';
+        break;
+      case 'active':
+        statusBadge = '<span class="badge bg-success">Approvato</span>';
+        break;
+      case 'completed':
+        statusBadge = '<span class="badge bg-secondary">Completato</span>';
+        break;
+      case 'rejected':
+        statusBadge = '<span class="badge bg-danger">Rifiutato</span>';
+        break;
+      default:
+        statusBadge = '<span class="badge bg-info">Sconosciuto</span>';
+    }
+    
+    html += `
+      <div class="col-md-6">
+        <div class="card" style="background:#0f0f0f;border:1px solid rgba(255,196,0,0.2)">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <h6 style="color:var(--gold);margin:0">Richiesta #${r.id.substring(0,8)}</h6>
+              ${statusBadge}
+            </div>
+            <p style="color:#fff;margin-bottom:5px"><strong>Macchina:</strong> ${r.machineId}</p>
+            <p style="color:#888;margin-bottom:5px;font-size:0.85rem">
+              <i class="fas fa-calendar"></i> ${r.startDate} → ${r.endDate}
+            </p>
+            ${r.notes ? '<p style="color:#888;font-size:0.85rem;font-style:italic">' + r.notes + '</p>' : ''}
+          </div>
+        </div>
+      </div>
+    `;
+  });
+  html += '</div>';
+  
+  container.innerHTML = html;
+}
+function loadAvailableMachines(){
+  const token = localStorage.getItem('manitech_token');
+
+  document.getElementById('availableMachinesList').innerHTML = '<p style="text-align:center;padding:30px;color:#888;font-weight:700"><i class="fas fa-spinner fa-spin"></i> CARICAMENTO MACCHINE DISPONIBILI...</p>';
+
+  google.script.run
+    .withSuccessHandler(function(machines){
+      availableMachines = machines;
+      filteredMachines = machines;
+
+      const categories = {};
+      machines.forEach(function(m){
+        categories[m.categoria] = true;
+      });
+
+      const catSelect = document.getElementById('filterCategoria');
+      catSelect.innerHTML = '<option value="">Tutte le categorie (' + machines.length + ')</option>';
+
+      Object.keys(categories).sort().forEach(function(cat){
+        const count = machines.filter(function(m){ return m.categoria === cat; }).length;
+        catSelect.innerHTML += '<option value="' + cat + '">' + cat + ' (' + count + ')</option>';
+      });
+
+      renderAvailableMachines(machines);
+    })
+    .withFailureHandler(function(error){
+      document.getElementById('availableMachinesList').innerHTML = 
+        '<div class="alert alert-danger"><i class="fas fa-exclamation-circle"></i> Errore caricamento: ' + error.message + '</div>';
+    })
+    .listAvailableMachinesForRental(token);
+}
+
+function renderAvailableMachines(machines){
+  const listDiv = document.getElementById('availableMachinesList');
+
+  if(machines.length === 0){
+    listDiv.innerHTML = '<div class="alert alert-warning" style="text-align:center"><i class="fas fa-info-circle"></i> Nessuna macchina disponibile per il noleggio</div>';
+    return;
+  }
+
+  let html = '<div style="overflow-x:auto"><table class="table-futuristic">';
+  html += '<thead><tr><th>Seleziona</th><th>ID</th><th>Serial</th><th>Modello</th><th>Categoria</th></tr></thead><tbody>';
+
+  machines.forEach(function(m){
+    html += '<tr style="cursor:pointer" onclick="selectMachine(\'' + m.id + '\', \'' + m.model + '\')">';
+    html += '<td><input type="radio" name="machineSelect" value="' + m.id + '"></td>';
+    html += '<td><strong style="color:var(--gold);font-family:Orbitron,sans-serif">' + m.id + '</strong></td>';
+    html += '<td style="font-weight:600">' + m.serial + '</td>';
+    html += '<td style="font-weight:600">' + m.model + '</td>';
+    html += '<td><span class="badge bg-info">' + m.categoria + '</span></td>';
+    html += '</tr>';
+  });
+
+  html += '</tbody></table></div>';
+  listDiv.innerHTML = html;
+}
+
+function selectMachine(id, model){
+  document.getElementById('rentalMachineId').value = id + ' - ' + model;
+  document.querySelectorAll('input[name="machineSelect"]').forEach(function(radio){
+    radio.checked = (radio.value === id);
+  });
+}
+
+function filterMachinesRental(){
+  const searchBox = document.getElementById('searchMachineRental');
+  const catFilter = document.getElementById('filterCategoria');
+
+  if(!searchBox || !catFilter) return;
+
+  const searchTerm = searchBox.value.toLowerCase();
+  const selectedCat = catFilter.value;
+
+  filteredMachines = availableMachines.filter(function(m){
+    const matchSearch = !searchTerm || 
+      m.id.toLowerCase().includes(searchTerm) ||
+      m.serial.toLowerCase().includes(searchTerm) ||
+      m.model.toLowerCase().includes(searchTerm);
+
+    const matchCat = !selectedCat || m.categoria === selectedCat;
+
+    return matchSearch && matchCat;
+  });
+
+  renderAvailableMachines(filteredMachines);
+}
+
+function submitRentalAdvanced(){
+  const token = localStorage.getItem('manitech_token');
+  const machineIdFull = document.getElementById('rentalMachineId').value;
+  const machineId = machineIdFull.split(' - ');
+  const startDate = document.getElementById('rentalStart').value;
+  const endDate = document.getElementById('rentalEnd').value;
+  const notes = document.getElementById('rentalNotes').value;
+
+  if(!machineId || !startDate || !endDate){
+    document.getElementById('rentalRequestStatus').innerHTML = 
+      '<div class="alert alert-warning"><i class="fas fa-exclamation-triangle"></i> Seleziona una macchina e compila le date</div>';
+    return;
+  }
+
+  document.getElementById('rentalRequestStatus').innerHTML = '<p style="color:#888;font-weight:700"><i class="fas fa-spinner fa-spin"></i> Invio richiesta...</p>';
+
+  google.script.run
+    .withSuccessHandler(function(result){
+      if(result.ok){
+        document.getElementById('rentalRequestStatus').innerHTML = 
+          '<div class="alert alert-success" style="background:linear-gradient(135deg, rgba(0,255,136,0.2), rgba(0,204,106,0.1))!important"><i class="fas fa-check-circle"></i> <strong>Richiesta inviata con successo!</strong><br>ID: <span style="font-family:Orbitron,sans-serif">' + result.id + '</span></div>';
+
+        document.getElementById('rentalMachineId').value = '';
+        document.getElementById('rentalStart').value = '';
+        document.getElementById('rentalEnd').value = '';
+        document.getElementById('rentalNotes').value = '';
+
+        loadRentals();
+        loadAvailableMachines();
+      } else {
+        document.getElementById('rentalRequestStatus').innerHTML = 
+          '<div class="alert alert-danger"><i class="fas fa-times-circle"></i> ' + result.error + '</div>';
+      }
+    })
+    .withFailureHandler(function(error){
+      document.getElementById('rentalRequestStatus').innerHTML = 
+        '<div class="alert alert-danger"><i class="fas fa-times-circle"></i> Errore: ' + error.message + '</div>';
+    })
+    .requestRentalAdvanced(token, machineId, startDate, endDate, notes);
+}
+
+function loadRentals(){
+  const token = localStorage.getItem('manitech_token');
+
+  google.script.run
+    .withSuccessHandler(function(rentals){
+      const listEl = document.getElementById('rentalsList');
+      if(!listEl) return;
+
+      if(rentals.length === 0){
+        listEl.innerHTML = '<div class="alert alert-info" style="text-align:center"><i class="fas fa-info-circle"></i> Nessuna richiesta di noleggio</div>';
+        return;
+      }
+
+      let html = '<div style="overflow-x:auto"><table class="table-futuristic">';
+      html += '<thead><tr><th>ID</th><th>Macchina</th><th>Richiedente</th><th>Dal</th><th>Al</th><th>Status</th>';
+
+      if(currentUser && currentUser.role === 'admin') html += '<th>Azioni</th>';
+
+      html += '</tr></thead><tbody>';
+
+      rentals.forEach(function(r){
+        let statusBadge = '';
+        if(r.status === 'requested') statusBadge = '<span class="badge bg-warning">In attesa</span>';
+        else if(r.status === 'active') statusBadge = '<span class="badge bg-success">Attivo</span>';
+        else if(r.status === 'rejected') statusBadge = '<span class="badge bg-danger">Rifiutato</span>';
+        else if(r.status === 'completed') statusBadge = '<span class="badge bg-secondary">Completato</span>';
+        else statusBadge = '<span class="badge bg-secondary">' + r.status + '</span>';
+
+        html += '<tr>';
+        html += '<td style="font-family:Orbitron,sans-serif;font-weight:700;color:var(--gold)">' + r.id + '</td>';
+        html += '<td><strong style="font-weight:800">' + r.machineId + '</strong></td>';
+        html += '<td>' + r.requestedBy + '</td>';
+        html += '<td>' + formatDate(r.startDate) + '</td>';
+        html += '<td>' + formatDate(r.endDate) + '</td>';
+        html += '<td>' + statusBadge + '</td>';
+
+        if(currentUser && currentUser.role === 'admin'){
+          if(r.status === 'requested'){
+            html += '<td style="white-space:nowrap">';
+            html += '<button class="btn-success btn-sm me-1" data-action="approve" data-id="' + r.id + '"><i class="fas fa-check"></i> Approva</button>';
+            html += '<button class="btn-danger btn-sm" data-action="reject" data-id="' + r.id + '"><i class="fas fa-times"></i> Rifiuta</button>';
+            html += '</td>';
+          } else if(r.status === 'active'){
+            html += '<td><button class="btn-warning btn-sm" data-action="end" data-id="' + r.id + '"><i class="fas fa-check-double"></i> Termina</button></td>';
+          } else {
+            html += '<td>-</td>';
+          }
+        }
+
+        html += '</tr>';
+      });
+
+      html += '</tbody></table></div>';
+      listEl.innerHTML = html;
+
+      setTimeout(function(){
+        document.querySelectorAll('button[data-action]').forEach(function(btn){
+          btn.addEventListener('click', function(){
+            const action = this.getAttribute('data-action');
+            const id = this.getAttribute('data-id');
+
+            if(action === 'approve') approveRental(id);
+            else if(action === 'reject') rejectRental(id);
+            else if(action === 'end') endRental(id);
+          });
+        });
+      }, 100);
+    })
+    .withFailureHandler(function(error){
+      const listEl = document.getElementById('rentalsList');
+      if(listEl) listEl.innerHTML = '<div class="alert alert-danger"><i class="fas fa-exclamation-circle"></i> Errore: ' + error.message + '</div>';
+    })
+    .listRentalRequests(token);
+}
+
+function approveRental(rentalId){
+  if(!confirm('Approvare il noleggio ' + rentalId + '?\n\nLa macchina verrà assegnata al cliente e non sarà più disponibile per altri noleggi fino al termine.')){
+    return;
+  }
+
+  const token = localStorage.getItem('manitech_token');
+  document.getElementById('rentalsList').innerHTML = '<p style="text-align:center;padding:40px;color:#888;font-weight:700"><i class="fas fa-spinner fa-spin"></i> Approvazione in corso...</p>';
+
+  google.script.run
+    .withSuccessHandler(function(){
+      alert('✅ Noleggio approvato! La macchina è stata assegnata al cliente.');
+      loadRentals();
+    })
+    .withFailureHandler(function(error){
+      alert('❌ Errore: ' + error.message);
+      loadRentals();
+    })
+    .adminApproveRentalAdvanced(token, rentalId);
+}
+
+function rejectRental(rentalId){
+  if(!confirm('Confermi di voler rifiutare il noleggio ' + rentalId + '?')){
+    return;
+  }
+
+  const token = localStorage.getItem('manitech_token');
+
+  google.script.run
+    .withSuccessHandler(function(){
+      alert('Noleggio rifiutato');
+      loadRentals();
+    })
+    .withFailureHandler(function(error){
+      alert('Errore: ' + error.message);
+    })
+    .adminRejectRental(token, rentalId);
+}
+
+function endRental(rentalId){
+  if(!confirm('Terminare il noleggio ' + rentalId + '?\n\nLa macchina verrà liberata e tornerà disponibile per altri noleggi.')){
+    return;
+  }
+
+  const token = localStorage.getItem('manitech_token');
+
+  google.script.run
+    .withSuccessHandler(function(){
+      alert('✅ Noleggio terminato! La macchina è di nuovo disponibile.');
+      loadRentals();
+    })
+    .withFailureHandler(function(error){
+      alert('Errore: ' + error.message);
+    })
+    .adminEndRentalAdvanced(token, rentalId);
+}
+
+// ===============================================
+//  GESTIONE MANUALI (COMPLETA)
+// ===============================================
+
+let allManuals = [];
+
+function showManuals(){
+  if(window.isLoggingOut || !localStorage.getItem('manitech_token')) return;
+  
+  document.querySelectorAll('.content-section').forEach(s => s.style.display = 'none');
+  document.getElementById('loginContainer').style.display = 'none';
+  const section = document.getElementById('manualsSection');
+  if(!section) return;
+  
+  section.style.display = 'block';
+  setActiveNav(5);
+  
+  section.innerHTML = `
+    <div class="card-futuristic">
+      <h1 class="card-title"><i class="fas fa-book"></i> MANUALI PDF</h1>
+      <p style="color:#888;margin-bottom:25px;font-weight:600;letter-spacing:1px;font-size:1rem">
+        <i class="fas fa-folder-open"></i> File dalla cartella Drive <span style="color:var(--gold)">"macchine industriali"</span>
+      </p>
+      
+      <div class="card-futuristic mb-4" style="background:linear-gradient(145deg, #0d0d0d 0%, #080808 100%);padding:20px">
+        <div class="row">
+          <div class="col-md-8 mb-3">
+            <label style="color:#888;font-weight:700;margin-bottom:8px;text-transform:uppercase;font-size:0.85rem">
+              <i class="fas fa-search"></i> Cerca per nome file
+            </label>
+            <input type="text" id="searchManuals" class="form-control" placeholder="Scrivi per cercare..." oninput="filterManuals()">
+          </div>
+          <div class="col-md-4 mb-3">
+            <label style="color:#888;font-weight:700;margin-bottom:8px;text-transform:uppercase;font-size:0.85rem">
+              <i class="fas fa-folder"></i> Filtra per cartella
+            </label>
+            <select id="filterFolder" class="form-control" onchange="filterManuals()">
+              <option value="">Tutte le cartelle</option>
+            </select>
+          </div>
+        </div>
+        <div id="searchStats" style="color:#666;font-size:0.85rem;margin-top:10px;font-weight:600"></div>
+      </div>
+      
+      <div id="manualsList">
+        <p style="text-align:center;padding:40px;color:#888;font-weight:700">
+          <i class="fas fa-spinner fa-spin"></i> CARICAMENTO MANUALI...
+        </p>
+      </div>
+    </div>
+  `;
+  
+  loadManuals();
+}
+
+function loadManuals(){
+  const token = localStorage.getItem('manitech_token');
+  
+  google.script.run
+    .withSuccessHandler(function(manuals){
+      allManuals = manuals;
+      
+      const folders = {};
+      manuals.forEach(function(m){
+        if(m.desc) folders[m.desc] = true;
+      });
+      
+      const folderSelect = document.getElementById('filterFolder');
+      if(folderSelect){
+        folderSelect.innerHTML = '<option value="">Tutte le cartelle (' + manuals.length + ')</option>';
+        Object.keys(folders).sort().forEach(function(folder){
+          const count = manuals.filter(function(m){ return m.desc === folder; }).length;
+          folderSelect.innerHTML += '<option value="' + folder + '">' + folder + ' (' + count + ')</option>';
+        });
+      }
+      
+      renderManuals(manuals);
+    })
+    .withFailureHandler(function(error){
+      document.getElementById('manualsList').innerHTML = 
+        '<div class="alert alert-danger"><i class="fas fa-exclamation-circle"></i> <strong>Errore</strong><br>' + error.message + '</div>';
+    })
+    .listManualsFromDrive(token);
+}
+
+function filterManuals(){
+  const searchTerm = document.getElementById('searchManuals').value.toLowerCase();
+  const selectedFolder = document.getElementById('filterFolder').value;
+  
+  const filtered = allManuals.filter(function(manual){
+    const matchSearch = !searchTerm || manual.title.toLowerCase().includes(searchTerm);
+    const matchFolder = !selectedFolder || manual.desc === selectedFolder;
+    return matchSearch && matchFolder;
+  });
+  
+  const statsDiv = document.getElementById('searchStats');
+  if(statsDiv){
+    if(searchTerm || selectedFolder){
+      statsDiv.innerHTML = '<i class="fas fa-filter"></i> Trovati <span style="color:var(--gold);font-weight:800">' + filtered.length + '</span> di ' + allManuals.length + ' manuali';
+    } else {
+      statsDiv.innerHTML = '';
+    }
+  }
+  
+  renderManuals(filtered);
+}
+
+function renderManuals(manuals){
+  const listDiv = document.getElementById('manualsList');
+  if(!listDiv) return;
+  
+  if(manuals.length === 0){
+    listDiv.innerHTML = 
+      '<div class="alert alert-warning" style="text-align:center;background:rgba(255,170,0,0.1)!important;border:1px solid rgba(255,170,0,0.3)!important"><i class="fas fa-info-circle"></i> <strong>Nessun PDF trovato</strong><br><small>Prova a modificare i filtri di ricerca</small></div>';
+    return;
+  }
+  
+  let html = '<div class="row">';
+  
+  manuals.forEach(function(manual){
+    html += `
+      <div class="col-md-6 col-lg-4 col-xl-3 mb-4">
+        <div class="card-futuristic" style="padding:20px;text-align:center;height:100%;display:flex;flex-direction:column;justify-content:space-between">
+          <div>
+            <i class="fas fa-file-pdf" style="font-size:3rem;color:#ff4444;margin-bottom:15px;filter:drop-shadow(0 0 15px rgba(255,68,68,0.5))"></i>
+            <h6 style="color:#fff;font-weight:800;margin-bottom:10px;font-family:Orbitron,sans-serif;letter-spacing:0.5px;font-size:0.8rem;line-height:1.3;min-height:60px;overflow:hidden;text-overflow:ellipsis">${manual.title}</h6>
+            <p style="color:#888;font-size:0.7rem;margin-bottom:8px;font-weight:600;line-height:1.2">
+              <i class="fas fa-folder"></i> ${manual.desc ? manual.desc.split(' › ').slice(-1) : 'N/A'}
+            </p>
+            <p style="color:var(--gold);font-size:0.7rem;margin-bottom:15px;font-weight:700;font-family:Orbitron,sans-serif">${manual.size || ''}</p>
+          </div>
+          <a href="https://drive.google.com/file/d/${manual.fileId}/view" target="_blank" class="btn-gold" style="display:inline-block;padding:10px 18px;font-size:0.8rem">
+            <i class="fas fa-external-link-alt"></i> APRI
+          </a>
+        </div>
+      </div>
+    `;
+  });
+  
+  html += '</div>';
+  
+  html += '<div style="text-align:center;margin-top:30px;padding-top:30px;border-top:1px solid rgba(255,196,0,0.2)">';
+  html += '<p style="color:#666;font-size:0.85rem;font-weight:600"><i class="fas fa-info-circle"></i> Totale visualizzato: <span style="color:var(--gold);font-weight:800">' + manuals.length + '</span> PDF</p>';
+  html += '</div>';
+  
+  listDiv.innerHTML = html;
+}
+
+// ===============================================
+//  GESTIONE UTENTI (COMPLETA)
+// ===============================================
+
+let allUsers = [];
+
+function showUsers(){
+  if(window.isLoggingOut || !localStorage.getItem('manitech_token')) return;
+  
+  document.querySelectorAll('.content-section').forEach(s => s.style.display = 'none');
+  document.getElementById('loginContainer').style.display = 'none';
+  const section = document.getElementById('usersSection');
+  if(!section) return;
+  
+  section.style.display = 'block';
+  setActiveNav(6);
+  
+  if(!currentUser || currentUser.role !== 'admin'){
+    section.innerHTML = `
+      <div class="card-futuristic">
+        <h1 class="card-title"><i class="fas fa-users-cog"></i> GESTIONE UTENTI</h1>
+        <div class="alert alert-danger" style="text-align:center">
+          <i class="fas fa-ban"></i> <strong>Accesso Negato</strong><br>
+          <small>Solo gli amministratori possono accedere a questa sezione</small>
+        </div>
+      </div>
+    `;
+    return;
+  }
+  
+  section.innerHTML = `
+    <div class="card-futuristic">
+      <h1 class="card-title"><i class="fas fa-users-cog"></i> GESTIONE UTENTI</h1>
+      <p style="color:#888;margin-bottom:25px;font-weight:600;letter-spacing:1px;font-size:1rem">
+        <i class="fas fa-shield-alt"></i> Amministrazione sistema
+      </p>
+      
+      <div class="card-futuristic mb-4" style="background:linear-gradient(145deg, #0d0d0d 0%, #080808 100%);padding:25px">
+        <h5 style="color:var(--gold);font-family:Orbitron,sans-serif;font-weight:900;margin-bottom:25px;letter-spacing:2px">
+          <i class="fas fa-user-plus"></i> AGGIUNGI NUOVO UTENTE
+        </h5>
+        
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <label style="color:#888;font-weight:700;margin-bottom:8px;text-transform:uppercase;font-size:0.85rem">Nome</label>
+            <input type="text" id="newUserName" class="form-control" placeholder="Nome completo">
+          </div>
+          <div class="col-md-4 mb-3">
+            <label style="color:#888;font-weight:700;margin-bottom:8px;text-transform:uppercase;font-size:0.85rem">Email</label>
+            <input type="email" id="newUserEmail" class="form-control" placeholder="user@example.com">
+          </div>
+          <div class="col-md-4 mb-3">
+            <label style="color:#888;font-weight:700;margin-bottom:8px;text-transform:uppercase;font-size:0.85rem">Password</label>
+            <input type="password" id="newUserPassword" class="form-control" placeholder="Password sicura">
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <label style="color:#888;font-weight:700;margin-bottom:8px;text-transform:uppercase;font-size:0.85rem">Ruolo</label>
+            <select id="newUserRole" class="form-control">
+              <option value="cliente">Cliente</option>
+              <option value="tecnico">Tecnico</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label style="color:#888;font-weight:700;margin-bottom:8px;text-transform:uppercase;font-size:0.85rem">Azienda (opzionale)</label>
+            <input type="text" id="newUserCompany" class="form-control" placeholder="Nome azienda">
+          </div>
+          <div class="col-md-4 mb-3">
+            <label style="color:transparent;font-size:0.85rem">.</label>
+            <button class="btn-gold w-100" onclick="createUser()">
+              <i class="fas fa-user-plus"></i> CREA UTENTE
+            </button>
+          </div>
+        </div>
+        
+        <div id="createUserStatus" class="mt-3"></div>
+      </div>
+      
+      <div class="card-futuristic">
+        <h5 style="color:var(--gold);font-family:Orbitron,sans-serif;font-weight:900;margin-bottom:25px;letter-spacing:2px">
+          <i class="fas fa-users"></i> UTENTI REGISTRATI
+        </h5>
+        
+        <div class="mb-3">
+          <input type="text" id="searchUsers" class="form-control" placeholder="🔍 Cerca utente per nome, email o azienda..." oninput="filterUsers()">
+        </div>
+        
+        <div id="usersList">
+          <p style="text-align:center;padding:40px;color:#888;font-weight:700">
+            <i class="fas fa-spinner fa-spin"></i> CARICAMENTO UTENTI...
+          </p>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  loadUsers();
+}
+
+function loadUsers(){
+  const token = localStorage.getItem('manitech_token');
+  
+  google.script.run
+    .withSuccessHandler(function(users){
+      allUsers = users;
+      renderUsers(users);
+    })
+    .withFailureHandler(function(error){
+      document.getElementById('usersList').innerHTML = 
+        '<div class="alert alert-danger"><i class="fas fa-exclamation-circle"></i> Errore: ' + error.message + '</div>';
+    })
+    .adminListUtenti(token);
+}
+
+function filterUsers(){
+  const searchTerm = document.getElementById('searchUsers').value.toLowerCase();
+  
+  const filtered = allUsers.filter(function(user){
+    return user.name.toLowerCase().includes(searchTerm) ||
+           user.email.toLowerCase().includes(searchTerm) ||
+           (user.company && user.company.toLowerCase().includes(searchTerm));
+  });
+  
+  renderUsers(filtered);
+}
+
+function renderUsers(users){
+  const listDiv = document.getElementById('usersList');
+  if(!listDiv) return;
+  
+  if(users.length === 0){
+    listDiv.innerHTML = '<div class="alert alert-warning" style="text-align:center">Nessun utente trovato</div>';
+    return;
+  }
+  
+  let html = '<div style="overflow-x:auto"><table class="table-futuristic">';
+  html += '<thead><tr><th>Nome</th><th>Email</th><th>Ruolo</th><th>Azienda</th><th>Creato</th><th>Azioni</th></tr></thead><tbody>';
+  
+  users.forEach(function(user){
+    let roleBadge = '';
+    if(user.role === 'admin') roleBadge = '<span class="badge bg-danger">ADMIN</span>';
+    else if(user.role === 'tecnico') roleBadge = '<span class="badge bg-warning">TECNICO</span>';
+    else roleBadge = '<span class="badge bg-info">CLIENTE</span>';
+    
+    html += '<tr>';
+    html += '<td><strong style="color:#fff">' + user.name + '</strong></td>';
+    html += '<td style="font-family:monospace;color:#888">' + user.email + '</td>';
+    html += '<td>' + roleBadge + '</td>';
+    html += '<td>' + (user.company || '-') + '</td>';
+    html += '<td style="color:#666;font-size:0.85rem">' + (user.createdAt || 'N/A') + '</td>';
+    html += '<td style="white-space:nowrap">';
+    html += '<button class="btn-warning btn-sm me-1" onclick="editUser(\'' + user.email + '\')"><i class="fas fa-edit"></i></button>';
+    html += '<button class="btn-danger btn-sm" onclick="deleteUser(\'' + user.email + '\')"><i class="fas fa-trash"></i></button>';
+    html += '</td>';
+    html += '</tr>';
+  });
+  
+  html += '</tbody></table></div>';
+  
+  html += '<div style="text-align:center;margin-top:20px;padding-top:20px;border-top:1px solid rgba(255,196,0,0.2)">';
+  html += '<p style="color:#666;font-size:0.85rem;font-weight:600"><i class="fas fa-users"></i> Totale: <span style="color:var(--gold);font-weight:800">' + users.length + '</span> utenti</p>';
+  html += '</div>';
+  
+  listDiv.innerHTML = html;
+}
+
+function createUser(){
+  const name = document.getElementById('newUserName').value.trim();
+  const email = document.getElementById('newUserEmail').value.trim();
+  const password = document.getElementById('newUserPassword').value;
+  const role = document.getElementById('newUserRole').value;
+  const company = document.getElementById('newUserCompany').value.trim();
+  const statusDiv = document.getElementById('createUserStatus');
+  
+  // Validazione frontend
+  if (!name || name.length < 2) {
+    statusDiv.innerHTML = '<div class="alert alert-danger">Nome non valido (minimo 2 caratteri)</div>';
+    statusDiv.style.display = 'block';
+    return;
+  }
+  
+  if (!email || !email.includes('@')) {
+    statusDiv.innerHTML = '<div class="alert alert-danger">Email non valida</div>';
+    statusDiv.style.display = 'block';
+    return;
+  }
+  
+  if (!password || password.length < 6) {
+    statusDiv.innerHTML = '<div class="alert alert-danger">Password troppo corta (minimo 6 caratteri)</div>';
+    statusDiv.style.display = 'block';
+    return;
+  }
+  
+  // Mostra loading
+  statusDiv.innerHTML = '<div class="alert alert-info"><i class="fas fa-spinner fa-spin"></i> Creazione utente in corso...</div>';
+  statusDiv.style.display = 'block';
+  
+  const token = localStorage.getItem('manitech_token');
+  
+  // ⭐ CHIAMATA AL BACKEND - Parametri nell'ordine corretto
+  google.script.run
+    .withSuccessHandler(function(response){
+      if (response.ok) {
+        statusDiv.innerHTML = '<div class="alert alert-success"><i class="fas fa-check-circle"></i> <strong>Utente creato con successo!</strong><br>Email: ' + response.user.email + '<br>Ruolo: ' + response.user.role + '</div>';
+        
+        // Pulisci i campi
+        document.getElementById('newUserName').value = '';
+        document.getElementById('newUserEmail').value = '';
+        document.getElementById('newUserPassword').value = '';
+        document.getElementById('newUserCompany').value = '';
+        document.getElementById('newUserRole').value = 'cliente';
+        
+        // Ricarica lista utenti
+        setTimeout(function(){
+          loadUsers();
+          statusDiv.style.display = 'none';
+        }, 3000);
+        
+      } else {
+        statusDiv.innerHTML = '<div class="alert alert-danger"><i class="fas fa-exclamation-circle"></i> <strong>Errore:</strong> ' + response.error + '</div>';
+      }
+    })
+    .withFailureHandler(function(error){
+      statusDiv.innerHTML = '<div class="alert alert-danger"><i class="fas fa-times-circle"></i> <strong>Errore di sistema:</strong> ' + error.message + '</div>';
+    })
+    .adminCreateUser(token, name, email, password, role, company); // ← Ordine corretto!
+}
+
+
+/**
+ * Modifica un utente esistente
+ */
+function editUser(email){
+  const newName = prompt('Nuovo nome (lascia vuoto per non modificare):');
+  const newRole = prompt('Nuovo ruolo (admin/tecnico/cliente, vuoto per non modificare):');
+  const newCompany = prompt('Nuova azienda (vuoto per non modificare):');
+  const newPassword = prompt('Nuova password (minimo 6 caratteri, vuoto per non modificare):');
+  
+  const updates = {};
+  if(newName) updates.name = newName;
+  if(newRole) updates.role = newRole;
+  if(newCompany !== null) updates.company = newCompany; // Permette di svuotare
+  if(newPassword) updates.password = newPassword;
+  
+  if(Object.keys(updates).length === 0){
+    alert('Nessuna modifica effettuata');
+    return;
+  }
+  
+  const token = localStorage.getItem('manitech_token');
+  
+  google.script.run
+    .withSuccessHandler(function(response){
+      if(response.ok){
+        alert('✅ Utente aggiornato con successo!');
+        loadUsers();
+      } else {
+        alert('❌ Errore: ' + response.error);
+      }
+    })
+    .withFailureHandler(function(error){
+      alert('❌ Errore di sistema: ' + error.message);
+    })
+    .adminUpdateUser(token, email, updates);
+}
+
+
+/**
+ * Elimina un utente
+ */
+function deleteUser(email){
+  if(!confirm('Sei sicuro di voler eliminare l\'utente ' + email + '?\n\nQuesta azione è IRREVERSIBILE!')){
+    return;
+  }
+  
+  const token = localStorage.getItem('manitech_token');
+  
+  google.script.run
+    .withSuccessHandler(function(response){
+      if(response.ok){
+        alert('✅ Utente eliminato con successo!');
+        loadUsers();
+      } else {
+        alert('❌ Errore: ' + response.error);
+      }
+    })
+    .withFailureHandler(function(error){
+      alert('❌ Errore di sistema: ' + error.message);
+    })
+    .adminDeleteUser(token, email);
+}
+
+
+// ===============================================
+//  ALTRE FUNZIONI
+// ===============================================
+
+// ===============================================
+//  ARCHIVIO VERIFICHE E GARANZIE
+// ===============================================
+
+let allVerificheDocuments = [];
+
+function showVerifiche() {
+  if (window.isLoggingOut || !localStorage.getItem('manitech_token')) return;
+  
+  document.querySelectorAll('.content-section').forEach(s => s.style.display = 'none');
+  document.getElementById('loginContainer').style.display = 'none';
+  const section = document.getElementById('formsSection');
+  if (!section) return;
+
+  section.style.display = 'block';
+  setActiveNav(4);
+
+  section.innerHTML = `
+    <div class="card-futuristic">
+      <h1 class="card-title"><i class="fas fa-archive"></i> ARCHIVIO VERIFICHE E GARANZIE</h1>
+      <p style="color:#888; margin-bottom:30px;">Documenti PDF generati per verifiche di sicurezza e garanzie.</p>
+
+      <div class="card-futuristic mb-4" style="background:linear-gradient(145deg, #0d0d0d 0%, #080808 100%); padding:25px;">
+        <div class="row">
+          <div class="col-md-8 mb-3">
+            <label class="form-label" style="color:#888; font-weight:600;">
+              <i class="fas fa-search"></i> Cerca Documento
+            </label>
+            <input type="text" id="searchVerificheDoc" class="form-control" 
+                   placeholder="Cerca per nome file..." 
+                   oninput="filterVerificheDocuments()">
+          </div>
+          <div class="col-md-4 mb-3">
+            <label class="form-label" style="color:#888; font-weight:600;">
+              <i class="fas fa-filter"></i> Filtra per Tipo
+            </label>
+            <select id="filterVerificheType" class="form-control" onchange="filterVerificheDocuments()">
+              <option value="">Tutti i documenti</option>
+              <option value="Verifica Sicurezza">Verifiche Sicurezza</option>
+              <option value="Garanzia">Garanzie</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      
+      <div id="verificheDocsContainer">
+        <p style="text-align:center; padding:40px; color:#888; font-weight:700;">
+          <i class="fas fa-spinner fa-spin"></i> CARICAMENTO DOCUMENTI...
+        </p>
+      </div>
+    </div>
+  `;
+
+  loadVerificheDocuments();
+}
+
+function loadVerificheDocuments() {
+  const token = localStorage.getItem('manitech_token');
+  
+  google.script.run
+    .withSuccessHandler(function(documents) {
+      allVerificheDocuments = documents;
+      renderVerificheDocuments(documents);
+    })
+    .withFailureHandler(function(error) {
+      document.getElementById('verificheDocsContainer').innerHTML = 
+        '<div class="alert alert-danger"><i class="fas fa-exclamation-circle"></i> Errore caricamento: ' + error.message + '</div>';
+    })
+    .listVerificheDocuments(token);
+}
+
+function renderVerificheDocuments(documents) {
+  const container = document.getElementById('verificheDocsContainer');
+  if (!container) return;
+
+  if (documents.length === 0) {
+    container.innerHTML = '<div class="alert alert-info" style="text-align:center;">Nessun documento trovato. I PDF generati appariranno qui.</div>';
+    return;
+  }
+
+  let html = '<div class="row">';
+  
+  documents.forEach(function(doc) {
+    const typeColor = doc.type === 'Verifica Sicurezza' ? '#00ff88' : '#00d4ff';
+    const typeIcon = doc.type === 'Verifica Sicurezza' ? 'clipboard-check' : 'shield-alt';
+    
+    html += `
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card-futuristic" style="padding:25px; text-align:center; height:100%; display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <i class="fas fa-${typeIcon}" style="font-size:3rem; color:${typeColor}; margin-bottom:20px; filter:drop-shadow(0 0 15px ${typeColor});"></i>
+            <h6 style="color:#fff; font-weight:800; margin-bottom:12px; font-family:Orbitron,sans-serif; font-size:0.75rem; line-height:1.4; min-height:45px;">${doc.title}</h6>
+            <p style="color:var(--gold); font-size:0.75rem; margin-bottom:8px; font-weight:700; font-family:Orbitron,sans-serif;">${doc.type}</p>
+            <p style="color:#888; font-size:0.7rem; margin-bottom:8px;">${doc.size}</p>
+            <p style="color:#666; font-size:0.65rem; margin-bottom:20px;"><i class="fas fa-calendar"></i> ${doc.createdAt}</p>
+          </div>
+          <a href="https://drive.google.com/file/d/${doc.fileId}/view" target="_blank" class="btn-gold" style="display:inline-block; padding:12px 20px; font-size:0.85rem;">
+            <i class="fas fa-external-link-alt"></i> APRI PDF
+          </a>
+        </div>
+      </div>
+    `;
+  });
+  
+  html += '</div>';
+  
+  html += '<div style="text-align:center; margin-top:30px; padding-top:30px; border-top:1px solid rgba(255,196,0,0.2);">';
+  html += '<p style="color:#666; font-size:0.85rem; font-weight:600;"><i class="fas fa-info-circle"></i> Totale: <span style="color:var(--gold); font-weight:800;">' + documents.length + '</span> documenti</p>';
+  html += '</div>';
+  
+  container.innerHTML = html;
+}
+
+function filterVerificheDocuments() {
+  const searchTerm = document.getElementById('searchVerificheDoc').value.toLowerCase();
+  const typeFilter = document.getElementById('filterVerificheType').value;
+
+  const filtered = allVerificheDocuments.filter(function(doc) {
+    const matchSearch = !searchTerm || doc.title.toLowerCase().includes(searchTerm);
+    const matchType = !typeFilter || doc.type === typeFilter;
+    return matchSearch && matchType;
+  });
+
+  renderVerificheDocuments(filtered);
+}
+
+
+// ===============================================
+//  INIZIALIZZAZIONE
+// ===============================================
+
+document.addEventListener('DOMContentLoaded', function() {
+  const token = localStorage.getItem('manitech_token');
+  const loginContainer = document.getElementById('loginContainer');
+  const sidebar = document.getElementById('sidebar');
+  const mainContent = document.getElementById('mainContent');
+
+  if (token) {
+    console.log("Token trovato, avvio initAfterLogin().");
+    if (loginContainer) {
+      loginContainer.style.display = 'none';
+    }
+    initAfterLogin();
+  } else {
+    console.log("Nessun token, mostro la pagina di login.");
+    if (loginContainer) {
+      loginContainer.style.display = 'flex';
+    }
+    if (sidebar) {
+      sidebar.style.display = 'none';
+    }
+    if (mainContent) {
+       mainContent.style.display = 'block';
+    }
+  }
+});
+// ===============================================
+//  GESTIONE CHECKLIST TECNICA
+// ===============================================
+
+// ===============================================
+//  RAPPORTO DI CONTROLLO PERIODICO
+// ===============================================
+
+let firmaTecnicoPad = null;
+let firmaClientePad = null;
+
+// Definiamo la struttura della checklist
+const checklistConfig = {
+  "✅ VERIFICHE SICUREZZE": [
+    { code: 'S.1', desc: 'Targhette portata' },
+    { code: 'S.2', desc: 'Etichette sicurezze' },
+    { code: 'S.3', desc: 'Efficienza sistema frenante' },
+    { code: 'S.4', desc: 'Efficienza sistema acceleratore' },
+    { code: 'S.5', desc: 'Sistema accensione-blocchetto chiave' },
+    { code: 'S.6', desc: 'Controllo funzionalità montante-attrezzature' },
+    { code: 'S.7', desc: 'Stato usura ed allungamento catene' },
+    { code: 'S.8', desc: 'Stato usura-controllo fermi forche' },
+    { code: 'S.9', desc: 'Usura e urti ruote' },
+    { code: 'S.10', desc: 'Dispositivo blocco batteria' },
+    { code: 'S.11', desc: 'Telaio e protezioni conducente' },
+    { code: 'S.12', desc: 'Efficienza sterzo' },
+    { code: 'S.13', desc: 'Cicalino ed altri sistemi di segnalazione acustica' },
+    { code: 'S.14', desc: 'Sistemi di ritenzione operatore a bordo' },
+    { code: 'S.15', desc: 'Staccabatteria' },
+    { code: 'S.16', desc: 'Tergicristalli e cristalli anteriori e posteriori' },
+    { code: 'S.17', desc: 'Fari di lavoro, lampeggianti e altri sistemi di segnalazione visiva' },
+    { code: 'S.18', desc: 'Sistema di rilevamento uomo a bordo' },
+    { code: 'S.19', desc: 'Specchietti retrovisori' },
+    { code: 'S.20', desc: 'Display e spie di avvertimento' },
+    { code: 'S.21', desc: 'Funzionalità timone' },
+    { code: 'S.22', desc: 'Sedile, ergonomia' },
+    { code: 'S.23', desc: 'Sistemi e dispositivi di comando marcia' },
+    { code: 'S.24', desc: 'Controllo perdite carburante' },
+    { code: 'S.25', desc: 'Dispositivo avviamento e arresto' },
+  ],
+  "🔧 MANUTENZIONE PREVENTIVA": [
+    { code: 'M.1', desc: 'Livello olio trasmissione, sfiatatoi' },
+    { code: 'M.2', desc: 'Rumorosità riduttore e differenziale' },
+    { code: 'M.3', desc: 'Funzionalità sterzo' },
+    { code: 'M.4', desc: 'Assale sterzo e ingrassaggio' },
+    { code: 'M.5', desc: 'Tubazioni freni e livello olio' },
+    { code: 'M.6', desc: 'Comandi, distributore, elettrovalvole e pompa' },
+    { code: 'M.7', desc: 'Tubazioni e raccordi idraulici' },
+    { code: 'M.8', desc: 'Livello olio idraulico e perdite' },
+    { code: 'M.9', desc: 'Controllo funzionalità montante' },
+    { code: 'M.10', desc: 'Supporti, perni, rulli guida, cilindri e cuscinetti montante' },
+    { code: 'M.11', desc: 'Piastra portaforche e traslatore' },
+    { code: 'M.12', desc: 'Stato usura e lubrificazione pattini traslatore' },
+    { code: 'M.13', desc: 'Stato usura e lubrificazione attrezzature' },
+  ],
+  "🔋 Verifiche per soli carrelli elettrici": [
+    { code: 'M.14', desc: 'Stato connessioni batteria' },
+    { code: 'M.15', desc: 'Livello e densità elettrolito' },
+    { code: 'M.16', desc: 'Controllo stato motori ove accessibile' },
+    { code: 'M.17', desc: 'Connessioni e cablaggi impianto' },
+    { code: 'M.18', desc: 'Teleruttori, contatti e spazzole ove applicabile' },
+  ],
+  "⛽ Verifiche per soli carrelli diesel": [
+    { code: 'M.19', desc: 'Condizioni filtro aria' },
+    { code: 'M.20', desc: 'Livello olio motore' },
+    { code: 'M.21', desc: 'Livello liquido refrigerante' },
+    { code: 'M.22', desc: 'Condizione cinghia ventilazione' },
+  ],
+  "🏗️ Verifiche per soli carrelli trilaterali e combinati": [
+    { code: 'M.23', desc: 'Funzionalità sicurezze attive e passive' },
+    { code: 'M.24', desc: 'Funzionalità attrezzatura trilaterale' },
+    { code: 'M.25', desc: 'Funzionalità riduzione velocità fuori e dentro corsia' },
+  ],
+};
+
+function openVerificaModal(machineId) {
+  const modal = document.getElementById('verificaModal');
+  if (!modal) return;
+  modal.classList.add('is-visible');
+
+  // Inizializza o pulisce i canvas per le firme
+  if (!firmaTecnicoPad) firmaTecnicoPad = new SignaturePad(document.getElementById('firmaTecnicoPad'));
+  else firmaTecnicoPad.clear();
+  
+  if (!firmaClientePad) firmaClientePad = new SignaturePad(document.getElementById('firmaClientePad'));
+  else firmaClientePad.clear();
+
+  // Carica i dati della macchina
+  const token = localStorage.getItem('manitech_token');
+  google.script.run
+    .withSuccessHandler(machine => {
+      document.getElementById('verificaDatiGenerali').innerHTML = `
+        <h6 style="color: var(--gold);">📌 DATI CLIENTE</h6>
+        <div class="row">
+          <div class="col-md-6 mb-2"><input type="text" id="verificaClienteAzienda" class="form-control" value="${machine.cliente || ''}" readonly style="background: #1a1a1a; color: #fff;"></div>
+          <div class="col-md-6 mb-2"><input type="text" id="verificaContattoNome" class="form-control" placeholder="Nome e Cognome contatto"></div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-2"><input type="tel" id="verificaContattoTel" class="form-control" placeholder="Telefono contatto"></div>
+          <div class="col-md-6 mb-2"><input type="email" id="verificaContattoEmail" class="form-control" placeholder="Email contatto"></div>
+        </div>
+        <h6 style="color: var(--gold); margin-top: 15px;">🏭 DATI MACCHINA</h6>
+        <div class="row">
+          <div class="col-md-4 mb-2"><input type="text" class="form-control" value="Marca: ${extractMarcaFrontend(machine.model)}" readonly style="background: #1a1a1a; color: #fff;"></div>
+          <div class="col-md-4 mb-2"><input type="text" class="form-control" value="Modello: ${machine.model}" readonly style="background: #1a1a1a; color: #fff;"></div>
+          <div class="col-md-4 mb-2"><input type="text" class="form-control" value="Matricola: ${machine.serial}" readonly style="background: #1a1a1a; color: #fff;"></div>
+        </div>
+        <input type="hidden" id="verificaMachineId" value="${machine.id}">
+      `;
+    })
+    .getMachineById(token, machineId);
+
+  // Genera la checklist
+  const container = document.getElementById('checklist-sections');
+  container.innerHTML = '';
+  for (const sectionTitle in checklistConfig) {
+    let sectionHtml = `<h6 style="color: var(--gold); margin-top: 20px;">${sectionTitle}</h6>`;
+    checklistConfig[sectionTitle].forEach(item => {
+      sectionHtml += `
+        <div class="row g-2 mb-1 align-items-center checklist-item" data-section="${sectionTitle}" data-code="${item.code}" data-desc="${item.desc}">
+          <div class="col-1">${item.code}</div>
+          <div class="col-7">${item.desc}</div>
+          <div class="col-3">
+            <div class="btn-group btn-group-sm" role="group">
+              <input type="radio" class="btn-check" name="status-${item.code}" id="status-p-${item.code}" value="P" autocomplete="off" checked>
+              <label class="btn btn-outline-success" for="status-p-${item.code}">P</label>
+
+              <input type="radio" class="btn-check" name="status-${item.code}" id="status-n-${item.code}" value="N" autocomplete="off">
+              <label class="btn btn-outline-danger" for="status-n-${item.code}">N</label>
+
+              <input type="radio" class="btn-check" name="status-${item.code}" id="status-np-${item.code}" value="NP" autocomplete="off">
+              <label class="btn btn-outline-secondary" for="status-np-${item.code}">NP</label>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+    container.innerHTML += sectionHtml;
+  }
+  
+  // Reset altre sezioni
+  document.getElementById('verificaNoteGenerali').value = '';
+  document.getElementById('ricambi-container').innerHTML = '';
+  addRicambioItem(); // Aggiungi la prima riga vuota per i ricambi
+}
+
+function hideVerificaModal() {
+  document.getElementById('verificaModal')?.classList.remove('is-visible');
+}
+
+function addRicambioItem() {
+  const container = document.getElementById('ricambi-container');
+  const itemId = `ricambio-item-${container.children.length}`;
+  const itemHtml = `
+    <div class="row g-2 mb-1 align-items-center" id="${itemId}">
+      <div class="col-md-3"><input type="text" class="form-control ricambio-cod" placeholder="Cod. Art."></div>
+      <div class="col-md-6"><input type="text" class="form-control ricambio-desc" placeholder="Descrizione"></div>
+      <div class="col-md-2"><input type="number" class="form-control ricambio-qta" placeholder="Q.tà" value="1"></div>
+      <div class="col-md-1"><button type="button" class="btn btn-sm btn-danger" onclick="document.getElementById('${itemId}').remove()"><i class="fas fa-trash"></i></button></div>
+    </div>`;
+  container.insertAdjacentHTML('beforeend', itemHtml);
+}
+
+function clearFirma(type) {
+  if (type === 'tecnico' && firmaTecnicoPad) firmaTecnicoPad.clear();
+  if (type === 'cliente' && firmaClientePad) firmaClientePad.clear();
+}
+
+function submitVerifica() {
+  const errorEl = document.getElementById('verificaError');
+  errorEl.style.display = 'none';
+
+  // Raccogli dati checklist
+  const formData = {
+    cliente: document.getElementById('verificaClienteAzienda').value,
+    contattoNome: document.getElementById('verificaContattoNome').value,
+    contattoTel: document.getElementById('verificaContattoTel').value,
+    contattoEmail: document.getElementById('verificaContattoEmail').value,
+    noteGenerali: document.getElementById('verificaNoteGenerali').value,
+    verificheSicurezze: [],
+    manutenzionePreventiva: [],
+    verificheElettrico: [],
+    verificheDiesel: [],
+    verificheTrilaterale: [],
+    ricambi: [],
+  };
+
+  document.querySelectorAll('.checklist-item').forEach(item => {
+    const section = item.dataset.section;
+    const code = item.dataset.code;
+    const desc = item.dataset.desc;
+    const status = item.querySelector(`input[name="status-${code}"]:checked`).value;
+    
+    const checkData = { code, desc, status };
+
+    if (section === "✅ VERIFICHE SICUREZZE") formData.verificheSicurezze.push(checkData);
+    else if (section === "🔧 MANUTENZIONE PREVENTIVA") formData.manutenzionePreventiva.push(checkData);
+    else if (section === "🔋 Verifiche per soli carrelli elettrici") formData.verificheElettrico.push(checkData);
+    else if (section === "⛽ Verifiche per soli carrelli diesel") formData.verificheDiesel.push(checkData);
+    else if (section === "🏗️ Verifiche per soli carrelli trilaterali e combinati") formData.verificheTrilaterale.push(checkData);
+  });
+
+  // Raccogli dati ricambi
+  document.querySelectorAll('#ricambi-container .row').forEach(row => {
+    const codice = row.querySelector('.ricambio-cod').value.trim();
+    if (codice) {
+      formData.ricambi.push({
+        codice: codice,
+        descrizione: row.querySelector('.ricambio-desc').value.trim(),
+        quantita: row.querySelector('.ricambio-qta').value
+      });
+    }
+  });
+  
+  // Raccogli firme
+  if (!firmaTecnicoPad.isEmpty()) formData.firmaTecnicoUrl = firmaTecnicoPad.toDataURL();
+  if (!firmaClientePad.isEmpty()) formData.firmaClienteUrl = firmaClientePad.toDataURL();
+
+  // Invia al backend
+  const token = localStorage.getItem('manitech_token');
+  const machineId = document.getElementById('verificaMachineId').value;
+
+  errorEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generazione PDF...';
+  errorEl.className = 'alert alert-info mt-3';
+  errorEl.style.display = 'block';
+
+  google.script.run
+    .withSuccessHandler(response => {
+      if (response.ok) {
+        alert(`✅ Rapporto creato con successo!\nPDF: ${response.fileName}`);
+        hideVerificaModal();
+        if (document.getElementById('formsSection')?.style.display !== 'none') {
+          loadVerificheDocuments();
+        }
+      } else {
+        errorEl.textContent = `Errore: ${response.error}`;
+        errorEl.className = 'alert alert-danger mt-3';
+      }
+    })
+    .withFailureHandler(err => {
+      errorEl.textContent = `Errore di sistema: ${err.message}`;
+      errorEl.className = 'alert alert-danger mt-3';
+    })
+    .createVerificaSicurezza(token, machineId, formData);
+}
+
+
+// ===============================================
+//  GESTIONE GARANZIE
+// ===============================================
+
+// ===============================================
+//  GESTIONE GARANZIE COMPLETE
+// ===============================================
+
+// ===============================================
+//  GESTIONE GARANZIE
+// ===============================================
+
+let garanziaSignaturePad = null;
+let garanziaPhotosData = [];
+
+function openGaranziaModal(machineId) {
+  const modalElement = document.getElementById('garanziaModal');
+  if (!modalElement) {
+    console.error('❌ Modale garanzia non trovata!');
+    return;
+  }
+
+  modalElement.classList.add('is-visible');
+
+  // Inizializza signature pad
+  const canvas = document.getElementById('garanziaSignaturePad');
+  if (canvas && !garanziaSignaturePad) {
+    garanziaSignaturePad = new SignaturePad(canvas, {
+      backgroundColor: 'rgb(255, 255, 255)',
+      penColor: 'rgb(0, 0, 0)'
+    });
+  }
+
+  // Reset dati
+  garanziaPhotosData = [];
+  if (garanziaSignaturePad) {
+    garanziaSignaturePad.clear();
+  }
+
+  const token = localStorage.getItem('manitech_token');
+
+  // Carica dati macchina
+  google.script.run
+    .withSuccessHandler(function(machine) {
+      if (!machine) {
+        alert('Errore: Macchina non trovata.');
+        hideGaranziaModal();
+        return;
+      }
+      
+      // Popola campi automatici
+      document.getElementById('garanziaMachineId').value = machine.id;
+      document.getElementById('garanziaCliente').value = machine.cliente || 'Non specificato';
+      document.getElementById('garanziaMarca').value = extractMarcaFrontend(machine.model);
+      document.getElementById('garanziaModello').value = machine.model;
+      document.getElementById('garanziaMatricola').value = machine.serial;
+      
+      // Reset campi da compilare
+      document.getElementById('garanziaDifetto').value = '';
+      document.getElementById('garanziaCodiceErrore').value = '';
+      document.getElementById('garanziaAzione').value = '';
+      document.getElementById('garanziaDifettoRisolto').value = 'No';
+      document.getElementById('garanziaOreMacchina').value = '';
+      document.getElementById('garanziaPhotos').value = '';
+      document.getElementById('garanziaPhotosPreview').innerHTML = '';
+      document.getElementById('garanziaError').style.display = 'none';
+    })
+    .withFailureHandler(function(err) {
+      console.error('❌ Errore caricamento macchina:', err);
+      alert('Errore nel caricamento dei dati della macchina.');
+      hideGaranziaModal();
+    })
+    .getMachineById(token, machineId);
+}
+
+function hideGaranziaModal() {
+  const modalElement = document.getElementById('garanziaModal');
+  if (modalElement) {
+    modalElement.classList.remove('is-visible');
+  }
+  garanziaPhotosData = [];
+}
+
+function clearGaranziaSignature() {
+  if (garanziaSignaturePad) {
+    garanziaSignaturePad.clear();
+  }
+}
+
+function extractMarcaFrontend(model) {
+  if (!model) return 'N/A';
+  const match = model.match(/^([A-Z]+)/i);
+  return match ? match[1].toUpperCase() : 'N/A';
+}
+
+function previewGaranziaPhotos(input) {
+  const preview = document.getElementById('garanziaPhotosPreview');
+  preview.innerHTML = '';
+  garanziaPhotosData = [];
+
+  if (input.files && input.files.length > 0) {
+    const maxFiles = Math.min(input.files.length, 5);
+    
+    for (let i = 0; i < maxFiles; i++) {
+      const file = input.files[i];
+      
+      if (file.size > 5 * 1024 * 1024) {
+        alert(`File ${file.name} troppo grande (max 5 MB)`);
+        continue;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        // Aggiungi preview
+        const col = document.createElement('div');
+        col.className = 'col-md-4';
+        
+        const isVideo = file.type.startsWith('video/');
+        const previewContent = isVideo 
+          ? `<video src="${e.target.result}" class="img-fluid rounded" style="max-height: 150px; width: 100%; object-fit: cover;" controls></video>`
+          : `<img src="${e.target.result}" class="img-fluid rounded" style="max-height: 150px; width: 100%; object-fit: cover;">`;
+        
+        col.innerHTML = `
+          <div style="position: relative;">
+            ${previewContent}
+            <button type="button" class="btn btn-sm btn-danger" 
+                    style="position: absolute; top: 5px; right: 5px;"
+                    onclick="removeGaranziaPhoto(${i})">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        `;
+        preview.appendChild(col);
+
+        // Salva dati base64
+        garanziaPhotosData.push({
+          name: file.name,
+          mimeType: file.type,
+          data: e.target.result.split(',')[1] // Solo base64, senza prefisso
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+}
+
+function removeGaranziaPhoto(index) {
+  garanziaPhotosData.splice(index, 1);
+  document.getElementById('garanziaPhotos').value = '';
+  document.getElementById('garanziaPhotosPreview').innerHTML = '';
+}
+
+function submitGaranzia() {
+  const token = localStorage.getItem('manitech_token');
+  const machineId = document.getElementById('garanziaMachineId').value;
+  const difetto = document.getElementById('garanziaDifetto').value;
+  const azione = document.getElementById('garanziaAzione').value;
+  const errorEl = document.getElementById('garanziaError');
+
+  // Validazione
+  if (!difetto || difetto.trim().length < 10) {
+    errorEl.textContent = 'Il difetto riscontrato è obbligatorio (minimo 10 caratteri).';
+    errorEl.style.display = 'block';
+    return;
+  }
+  
+  if (!azione || azione.trim().length < 10) {
+    errorEl.textContent = 'L\'azione intrapresa è obbligatoria (minimo 10 caratteri).';
+    errorEl.style.display = 'block';
+    return;
+  }
+  
+  if (!machineId) {
+    errorEl.textContent = 'Errore: Macchina non selezionata.';
+    errorEl.style.display = 'block';
+    return;
+  }
+  
+  errorEl.style.display = 'none';
+
+  // Prepara firma
+  let signatureData = null;
+  if (garanziaSignaturePad && !garanziaSignaturePad.isEmpty()) {
+    signatureData = {
+      data: garanziaSignaturePad.toDataURL('image/png').split(',')[1],
+      mimeType: 'image/png'
+    };
+  }
+
+  // Prepara i dati del form
+  const formData = {
+    difettoRiscontrato: difetto,
+    codiceErrore: document.getElementById('garanziaCodiceErrore').value,
+    azioneIntrapresa: azione,
+    difettoRisolto: document.getElementById('garanziaDifettoRisolto').value,
+    oreMacchina: document.getElementById('garanziaOreMacchina').value,
+    photos: garanziaPhotosData,
+    signature: signatureData
+  };
+
+  // Mostra loading
+  errorEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generazione PDF in corso...';
+  errorEl.className = 'alert alert-info';
+  errorEl.style.display = 'block';
+
+  google.script.run
+    .withSuccessHandler(function(response) {
+      if (response.ok) {
+        alert(`✅ Rapportino di garanzia creato!\n\nPDF: ${response.fileName}\n\nPuoi visualizzarlo nella sezione "Verifiche".`);
+        hideGaranziaModal();
+        
+        const verificheSection = document.getElementById('formsSection');
+        if (verificheSection && verificheSection.style.display !== 'none') {
+          loadVerificheDocuments();
+        }
+      } else {
+        errorEl.textContent = `Errore: ${response.error}`;
+        errorEl.className = 'alert alert-danger';
+        errorEl.style.display = 'block';
+      }
+    })
+    .withFailureHandler(function(err) {
+      errorEl.textContent = `Errore di sistema: ${err.message}`;
+      errorEl.className = 'alert alert-danger';
+      errorEl.style.display = 'block';
+    })
+    .createGaranzia(token, machineId, formData);
+}
+
+
+
+</script>
+</body>
+</html>
