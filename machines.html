@@ -1,0 +1,54 @@
+<div class="card card-dark p-3" id="machinesContainer">
+  <h4 style="color:#FFC400">Parco Macchine</h4>
+  <div id="machinesStatus">⏳ Caricamento...</div>
+  <div id="machinesList"></div>
+</div>
+
+<script>
+// Esegui subito dopo caricamento
+setTimeout(function(){
+  const token = localStorage.getItem('manitech_token');
+  const statusDiv = document.getElementById('machinesStatus');
+  const listDiv = document.getElementById('machinesList');
+  
+  if (!token) {
+    statusDiv.innerHTML = '<span class="text-danger">❌ Token mancante - rieffettua login</span>';
+    return;
+  }
+  
+  google.script.run
+    .withSuccessHandler(function(machines){
+      statusDiv.innerHTML = '<span class="text-success">✅ ' + machines.length + ' macchine caricate</span>';
+      
+      if (machines.length === 0) {
+        listDiv.innerHTML = '<div class="alert alert-warning mt-3">Nessuna macchina trovata</div>';
+        return;
+      }
+      
+      let html = '<div class="table-responsive mt-3"><table class="table table-dark table-striped table-hover">';
+      html += '<thead><tr><th>ID</th><th>Serial</th><th>Modello</th><th>Status</th></tr></thead><tbody>';
+      
+      machines.forEach(function(m){
+        const statusBadge = m.status === 'available' 
+          ? '<span class="badge bg-success">Disponibile</span>' 
+          : '<span class="badge bg-warning">Occupato</span>';
+        
+        html += '<tr>';
+        html += '<td><strong>' + (m.id || 'N/A') + '</strong></td>';
+        html += '<td>' + (m.serial || 'N/A') + '</td>';
+        html += '<td>' + (m.model || 'N/A') + '</td>';
+        html += '<td>' + statusBadge + '</td>';
+        html += '</tr>';
+      });
+      
+      html += '</tbody></table></div>';
+      listDiv.innerHTML = html;
+    })
+    .withFailureHandler(function(error){
+      statusDiv.innerHTML = '<span class="text-danger">❌ Errore caricamento</span>';
+      listDiv.innerHTML = '<div class="alert alert-danger mt-3">Errore: ' + error.message + '</div>';
+      console.error('Errore listMachines:', error);
+    })
+    .listMachines(token);
+}, 100); // Delay minimo per assicurare che DOM sia pronto
+</script>
